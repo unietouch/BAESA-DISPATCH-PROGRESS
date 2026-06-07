@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogiTrack System - Master Terminal</title>
+    <title>LogiTrack System - Master Terminal Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -47,6 +47,7 @@
         .kpi-card h4 { font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 4px; text-transform: uppercase; }
         .kpi-v { font-size: 1.8rem; font-weight: 700; color: white; line-height: 1.2; }
         .kpi-subtext { font-size: 0.75rem; color: var(--accent-warning); margin-top: 4px; font-weight: 600; }
+        .kpi-done-badge { font-size: 0.75rem; color: var(--accent-success); margin-top: 2px; font-weight: 600; }
 
         .reconciliation-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; border: 1px solid var(--border-color); text-align: center; }
         .reconciliation-table th { background: #0f172a; color: var(--text-secondary); padding: 12px; font-weight: 600; border: 1px solid var(--border-color); }
@@ -74,11 +75,12 @@
         input:focus, select:focus { border-color: var(--accent-color); }
         input:disabled, select:disabled, textarea:disabled { background: #1e293b; color: var(--disabled-color); cursor: not-allowed; border-color: transparent; }
 
-        .btn-primary, .btn-secondary, .btn-success, .btn-danger { padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: 1px solid transparent; transition: background 0.2s; white-space: nowrap; }
+        .btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-export { padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border: 1px solid transparent; transition: background 0.2s; white-space: nowrap; }
         .btn-primary { background: var(--accent-color); color: white; }
         .btn-secondary { background: transparent; border-color: var(--border-color); color: var(--text-main); }
         .btn-success { background: var(--accent-success); color: white; }
         .btn-danger { background: var(--accent-danger); color: white; }
+        .btn-export { background: #4f46e5; color: white; }
         .btn-primary:disabled, .btn-secondary:disabled, .btn-success:disabled, .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
         .table-wrapper { overflow-x: auto; margin-top: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
@@ -108,9 +110,9 @@
                 <label><i class="fa-solid fa-user-shield"></i> Active Profile Session</label>
                 <select id="global-role-identity-selector" onchange="executeRoleContextSwitch(this.value)">
                     <option value="ADMIN">ADMIN (Full Access Root)</option>
-                    <option value="PGI">PGI (Warehouse Operations Staff)</option>
-                    <option value="AR">AR (Accounts Receivable Staff)</option>
-                    <option value="TRANSPORT">TRANSPORT (Fleet Logistics Staff)</option>
+                    <option value="PGI">PGI (Warehouse Operations)</option>
+                    <option value="AR">AR (Accounts Receivable)</option>
+                    <option value="TRANSPORT">TRANSPORT (Fleet Logistics)</option>
                 </select>
                 <div id="sidebar-role-badge" class="role-indicator-badge badge-admin">ADMIN CONSOLE</div>
             </div>
@@ -124,7 +126,7 @@
             </ul>
         </div>
         <div style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; padding-top: 12px; border-top: 1px solid var(--border-color);">
-            Terminal Clock: <span id="live-system-clock">2026-06-07</span>
+            Terminal Clock: <span id="live-system-clock">2026-06-08</span>
         </div>
     </aside>
 
@@ -136,12 +138,12 @@
                         <i class="fa-solid fa-calendar-check" style="font-size: 1.5rem; color: var(--accent-color);"></i>
                         <div>
                             <h2 style="font-size: 1.25rem; font-weight: 700;">Operational Monitoring Terminal</h2>
-                            <p style="font-size: 0.8rem; color: var(--text-secondary);">Centralized date picker filter engine controlling all dashboard workspaces.</p>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary);">Centralized date control selector filtering operations real-time.</p>
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px; background: #0f172a; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color);">
                         <label for="central-target-date-picker" style="font-size: 0.8rem; font-weight: bold; color: var(--text-secondary); white-space: nowrap; text-transform: uppercase;">Dashboard RDD:</label>
-                        <input type="date" id="central-target-date-picker" value="2026-06-07" style="padding: 6px 10px; width: 160px; font-weight: bold;" onchange="propagateGlobalSystemDate(this.value)">
+                        <input type="date" id="central-target-date-picker" value="2026-06-08" style="padding: 6px 10px; width: 160px; font-weight: bold;" onchange="propagateGlobalSystemDate(this.value)">
                     </div>
                 </div>
             </div>
@@ -149,17 +151,17 @@
             <div class="kpi-row">
                 <div class="kpi-grid-left">
                     <div class="kpi-sub-grid">
-                        <div class="kpi-card"><h4>PICKED</h4><p class="kpi-v" id="dash-lbl-picked">0</p><p class="kpi-subtext" id="sub-lbl-picked">PENDING: 0</p></div>
-                        <div class="kpi-card"><h4>PGI</h4><p class="kpi-v" id="dash-lbl-pgi">0</p><p class="kpi-subtext" id="sub-lbl-pgi">PENDING: 0</p></div>
-                        <div class="kpi-card"><h4>INVOICED</h4><p class="kpi-v" id="dash-lbl-invoiced">0</p><p class="kpi-subtext" id="sub-lbl-invoiced">PENDING: 0</p></div>
+                        <div class="kpi-card"><h4>PICKED</h4><p class="kpi-v" id="dash-lbl-picked">Done: 0</p><p class="kpi-subtext" id="sub-lbl-picked">Pending: 0</p></div>
+                        <div class="kpi-card"><h4>PGI</h4><p class="kpi-v" id="dash-lbl-pgi">Done: 0</p><p class="kpi-subtext" id="sub-lbl-pgi">Pending: 0</p></div>
+                        <div class="kpi-card"><h4>INVOICED</h4><p class="kpi-v" id="dash-lbl-invoiced">Done: 0</p><p class="kpi-subtext" id="sub-lbl-invoiced">Pending: 0</p></div>
                     </div>
                     <div class="kpi-sub-grid">
-                        <div class="kpi-card"><h4>DS PRINTING</h4><p class="kpi-v" id="dash-lbl-ds">0</p><p class="kpi-subtext" id="sub-lbl-ds">PENDING: 0</p></div>
-                        <div class="kpi-card"><h4>CHECKED</h4><p class="kpi-v" id="dash-lbl-checked">0</p><p class="kpi-subtext" id="sub-lbl-checked">PENDING: 0</p></div>
-                        <div class="kpi-card" style="border-left: 4px solid var(--accent-success);"><h4>LOADED</h4><p class="kpi-v" id="dash-lbl-loaded">0</p><p class="kpi-subtext" id="sub-lbl-loaded" style="color:var(--accent-success);">COMPLETE</p></div>
+                        <div class="kpi-card"><h4>DS PRINTING</h4><p class="kpi-v" id="dash-lbl-ds">Done: 0</p><p class="kpi-subtext" id="sub-lbl-ds">Pending: 0</p></div>
+                        <div class="kpi-card"><h4>CHECKED</h4><p class="kpi-v" id="dash-lbl-checked">Done: 0</p><p class="kpi-subtext" id="sub-lbl-checked">Pending: 0</p></div>
+                        <div class="kpi-card" style="border-left: 4px solid var(--accent-success);"><h4>LOADED</h4><p class="kpi-v" id="dash-lbl-loaded">Done: 0</p><p class="kpi-subtext" id="sub-lbl-loaded" style="color:var(--accent-success);">Pending: 0</p></div>
                     </div>
                 </div>
-                <div class="kpi-card" style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(145deg, #1e293b 0%, #0b0f19 100%); border: 1px solid rgba(59, 130, 246, 0.2); integrity-check: true;">
+                <div class="kpi-card" style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(145deg, #1e293b 0%, #0b0f19 100%); border: 1px solid rgba(59, 130, 246, 0.2);">
                     <h4 style="margin-bottom: 6px; font-weight: 700; color: var(--text-main); letter-spacing: 0.05em;">TOTAL DISPATCHES (TARGET)</h4>
                     <p style="font-size: 3.8rem; font-weight: 800; color: white; line-height: 1;" id="dash-lbl-target">0</p>
                 </div>
@@ -167,7 +169,7 @@
 
             <div class="view-panel" style="margin-bottom: 24px; padding: 20px;">
                 <h3 style="font-size: 1rem; color: white; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-calculator" style="color: var(--accent-warning);"></i> Pending Trucks to be Loaded Analytics Grid
+                    <i class="fa-solid fa-calculator" style="color: var(--accent-warning);"></i> Running Fleet & Order Balancing Aggregates
                 </h3>
                 <div style="overflow-x: auto;">
                     <table class="reconciliation-table">
@@ -205,9 +207,12 @@
                 <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                     <div>
                         <h1 style="font-size: 1.4rem; font-weight: 700;">Master Planning Matrix Table</h1>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Active Filter Target Window Date: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-07</span></p>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Active Target Date Window: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-08</span></p>
                     </div>
                     <div style="display: flex; gap: 10px;">
+                        <button class="btn-export" onclick="exportAuditTrailMatrixToCSV()">
+                            <i class="fa-solid fa-file-csv"></i> Export Manifest & Timestamps
+                        </button>
                         <button id="trigger-excel-drawer-btn" class="btn-secondary" style="color: var(--accent-color); border-color: rgba(59, 130, 246, 0.4);" onclick="toggleControlDrawers('excel')">
                             <i class="fa-solid fa-file-import"></i> Paste from Excel Spreadsheet
                         </button>
@@ -222,28 +227,28 @@
                         <h3 style="font-size:0.9rem; color:var(--accent-color); font-weight:bold;"><i class="fa-solid fa-paste"></i> Clipboard Copy-Paste Excel Data Engine</h3>
                         <button class="btn-secondary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="document.getElementById('excel-importer-drawer').classList.add('hidden')">✕ Close</button>
                     </div>
-                    <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px;">Paste clipboard text rows mapping exactly to these layout columns:<br>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px;">Paste clipboard text rows matching this raw arrangement layout columns directly:<br>
                     <code style="background:#0f172a; padding:4px 8px; border-radius:4px; display:inline-block; margin-top:4px; color:white; font-weight:bold;">TRUCK TYPE [Tab] DISPATCH [Tab] REQ. DELIVERY DATE [Tab] CUSTOMER [Tab] ROUTE ( CITY )</code></p>
-                    <textarea id="excel-paste-input-area" rows="5" style="margin-bottom:12px; font-family: monospace; font-size:0.8rem;" placeholder="Paste text here straight from Excel sheets..."></textarea>
+                    <textarea id="excel-paste-input-area" rows="5" style="margin-bottom:12px; font-family: monospace; font-size:0.8rem;" placeholder="Paste text rows here straight from Excel spreadsheet software columns..."></textarea>
                     <button id="btn-execute-excel-parse" class="btn-primary" onclick="processExcelClipboardData()"><i class="fa-solid fa-gears"></i> Process Ingestion Matrix Rows</button>
                 </div>
 
                 <div id="manual-entry-drawer" class="manual-entry-box hidden">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <h3 style="font-size:0.9rem; color:var(--accent-success); font-weight:bold;"><i class="fa-solid fa-plus"></i> Add Manual Manifest Delivery Dispatch Record</h3>
+                        <h3 style="font-size:0.9rem; color:var(--accent-success); font-weight:bold;"><i class="fa-solid fa-plus"></i> Add Manual Manifest Delivery Record</h3>
                         <button class="btn-secondary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="document.getElementById('manual-entry-drawer').classList.add('hidden')">✕ Close</button>
                     </div>
                     <form id="manual-delivery-form-element" class="manual-entry-form" onsubmit="handleManualManifestSubmission(event)">
-                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Dispatch ID</label><input type="text" id="field-m-dispatch" required placeholder="e.g., 10129045"></div>
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Dispatch ID</label><input type="text" id="field-m-dispatch" required placeholder="e.g., 10129030"></div>
                         <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Target Delivery Date</label><input type="date" id="field-m-rdd" required></div>
-                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Customer Name Account</label><input type="text" id="field-m-customer" required placeholder="e.g., PBD INFRA"></div>
-                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Route ( City Destination )</label><input type="text" id="field-m-route" required placeholder="e.g., CALOOCAN CITY"></div>
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Customer Name Account</label><input type="text" id="field-m-customer" required placeholder="e.g., PG"></div>
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Route ( Destination )</label><input type="text" id="field-m-route" required placeholder="e.g., CALOOCAN"></div>
                         <div>
-                            <label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Required Truck Model Class</label>
+                            <label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Truck Model Class</label>
                             <select id="field-m-type"><option value="AUV">AUV</option><option value="4WH">4WH</option><option value="6WH">6WH</option><option value="10WH">10WH</option><option value="20FT/40FT">20FT/40FT</option></select>
                         </div>
                         <div>
-                            <label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Bay Dock Position Staging</label>
+                            <label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Bay Staging Location</label>
                             <select id="field-m-bay"><option value="UNASSIGNED">UNASSIGNED</option><option value="Bay 1">Bay 1</option><option value="Bay 2">Bay 2</option><option value="Bay 3">Bay 3</option><option value="Bay 4">Bay 4</option><option value="Bay 5">Bay 5</option><option value="Bay 6">Bay 6</option><option value="Bay 7">Bay 7</option><option value="Bay 8">Bay 8</option></select>
                         </div>
                         <button type="submit" class="btn-success">Save Entry</button>
@@ -252,7 +257,7 @@
 
                 <div style="background: rgba(0, 0, 0, 0.15); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
                     <i class="fa-solid fa-magnifying-glass" style="color:var(--text-secondary);"></i>
-                    <input type="text" id="planning-text-search-filter" placeholder="Instant Search matches for Dispatch ID, Customer Accounts, or Destination Routes..." style="background: transparent; border: none; padding: 4px;" oninput="renderPlanningTableMatrixView()">
+                    <input type="text" id="planning-text-search-filter" placeholder="Search matches for Dispatch ID, Customer Accounts, or Destination Routes..." style="background: transparent; border: none; padding: 4px;" oninput="renderPlanningTableMatrixView()">
                 </div>
 
                 <div class="table-wrapper">
@@ -262,7 +267,7 @@
                                 <th>Delivery ID (DISPATCH)</th>
                                 <th>Date (REQ. DELIVERY DATE)</th>
                                 <th>Customer</th>
-                                <th>Route Description (ROUTE ( CITY ))</th>
+                                <th>Route Description</th>
                                 <th>Truck Type</th>
                                 <th>Bay Staging</th>
                                 <th>Assigned Truck ID</th>
@@ -284,7 +289,7 @@
             <div class="view-panel">
                 <header style="margin-bottom: 20px;">
                     <h1 style="font-size: 1.4rem; font-weight: 700;">Transport Fleet Asset Pool Tracking</h1>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Target Filter View Date Frame: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-07</span></p>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Target Filter View Date Frame: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-08</span></p>
                 </header>
 
                 <div class="manual-entry-box" id="truck-registration-input-container">
@@ -297,7 +302,7 @@
                         <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Truck Code Identity</label><input type="text" id="field-t-code" placeholder="e.g., AUV-1" required></div>
                         <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Registered Plate Number</label><input type="text" id="field-t-plate" placeholder="e.g., NHN-675" required></div>
                         <div>
-                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Time of Entry Registry Timestamp</label>
+                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Time of Entry Hour Mark</label>
                             <select id="field-t-hour">
                                 <option value="5">05:00 AM</option><option value="6">06:00 AM</option><option value="7">07:00 AM</option>
                                 <option value="8">08:00 AM</option><option value="9">09:00 AM</option><option value="10" selected>10:00 AM</option>
@@ -311,18 +316,13 @@
                     </form>
                 </div>
 
-                <div style="background: rgba(0, 0, 0, 0.15); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
-                    <i class="fa-solid fa-filter" style="color:var(--text-secondary);"></i>
-                    <input type="text" id="truck-pool-search-string-filter" placeholder="Filter operational vehicle lists by code tokens or license plate numbers..." style="background: transparent; border: none; padding: 4px;" oninput="renderTruckAssetsListView()">
-                </div>
-
                 <div class="table-wrapper">
                     <table>
                         <thead>
                             <tr>
-                                <th>Truck Model Classification</th>
-                                <th>Truck Code Identity</th>
-                                <th>Registered Plate Number</th>
+                                <th>Truck Model</th>
+                                <th>Truck Code ID</th>
+                                <th>Registered Plate Layout</th>
                                 <th>Availability Status</th>
                                 <th>Registered Hour Mark</th>
                                 <th>Date Log</th>
@@ -338,9 +338,8 @@
             <div class="view-panel">
                 <header style="margin-bottom: 24px;">
                     <h1 style="font-size: 1.4rem; font-weight: 700;">Loading Dock Bay Matrix Staging Layout Map</h1>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Real-Time visual tracking representation scoped for RDD: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-07</span></p>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Real-Time visual tracking representation scoped for RDD: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-08</span></p>
                 </header>
-
                 <div class="split-flex-container">
                     <div class="bay-grid-left" id="bay-matrix-visual-layout-grid-box"></div>
                     <div class="fleet-summary-right" id="bay-view-yard-fleet-summary-right-box"></div>
@@ -352,20 +351,23 @@
             <div class="view-panel">
                 <header style="margin-bottom: 20px;">
                     <h1 style="font-size: 1.4rem; font-weight: 700;">User Platform Management Security Profiles Matrix</h1>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Identity access database ledger tracking active security permissions tokens.</p>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Identity access database ledger matching your administration sheet format perfectly.</p>
                 </header>
 
                 <div class="manual-entry-box" id="user-creation-drawer-container">
-                    <h3 style="font-size: 0.95rem; margin-bottom: 14px; color: var(--accent-color); font-weight:bold;"><i class="fa-solid fa-user-plus"></i> Provision System User Security Profile Credential Token</h3>
+                    <h3 style="font-size: 0.95rem; margin-bottom: 14px; color: var(--accent-color); font-weight:bold;"><i class="fa-solid fa-user-plus"></i> Provision System User Security Profile</h3>
                     <form id="user-credential-provision-form-element" class="manual-entry-form" onsubmit="handleUserAccessAccountGeneration(event)">
-                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Account Username Handle</label><input type="text" id="field-u-username" placeholder="e.g., pgi_operator" required></div>
-                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Full Employee Identity Name</label><input type="text" id="field-u-fullname" placeholder="e.g., Jonathan Doe" required></div>
-                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Plain System Access Password</label><input type="text" id="field-u-password" placeholder="e.g., SecurePass123" required></div>
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">USER</label><input type="text" id="field-u-username" placeholder="e.g., ACCOUNT_HANDLE" required></div>
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">DEFAULTPASSWORD</label><input type="text" id="field-u-password" placeholder="e.g., 123" required></div>
                         <div>
-                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Access Authorization Role Scope</label>
+                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">ACCESS TYPE</label>
+                            <select id="field-u-type"><option value="ADMIN">ADMIN</option><option value="STAFF">STAFF</option></select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">FUNCTIONAL ROLE ASSIGNMENT</label>
                             <select id="field-u-role"><option value="Admin">Admin</option><option value="PGI">PGI</option><option value="AR">AR</option><option value="Transport">Transport</option></select>
                         </div>
-                        <button type="submit" class="btn-primary"><i class="fa-solid fa-user-shield"></i> Save Profile Token</button>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-user-shield"></i> Save Profile Account</button>
                     </form>
                 </div>
 
@@ -373,11 +375,11 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Account Username Handle (USER)</th>
-                                <th>Full Employee Identity</th>
-                                <th>Security Role Scope (ACCESS TYPE)</th>
-                                <th>System Plaintext Password (DEFAULT_PASSWORD)</th>
-                                <th style="text-align: right;">Administrative Access Actions</th>
+                                <th>USER</th>
+                                <th>DEFAULTPASSWORD</th>
+                                <th>ACCESS TYPE</th>
+                                <th>ASSIGNED ROLE</th>
+                                <th style="text-align: right;">Administrative Revocation</th>
                             </tr>
                         </thead>
                         <tbody id="user-accounts-matrix-table-tbody"></tbody>
@@ -388,99 +390,228 @@
 
         <div class="view-panel" style="margin-top: 20px; background: #0b0f19; border: 1px dashed rgba(255,255,255,0.15);">
             <h4 style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-database" style="color: var(--accent-color);"></i> Database Migration Synchronization Schema Engine (Supabase / PostgreSQL Ledger)
+                <i class="fa-solid fa-database" style="color: var(--accent-success);"></i> Fixed Database Migration Script (Resolves 'status column' & 'duplicate key' crashes)
             </h4>
-            <textarea readonly style="font-family: monospace; font-size: 0.78rem; background: #05070f; border-color: rgba(255,255,255,0.05); color: #34d399; height: 120px; width: 100%; resize: none; padding: 12px;" onclick="this.select()">
-ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER NOT NULL DEFAULT 10;
--- Step-by-step milestone triggers can be added here to guarantee strict execution layers on database constraints.</textarea>
+            <textarea readonly style="font-family: monospace; font-size: 0.78rem; background: #05070f; border-color: rgba(255,255,255,0.05); color: #34d399; height: 110px; width: 100%; resize: none; padding: 12px;" onclick="this.select()">
+-- FIXED SCHEMA: Dropped legacy string status columns to use binary timeline flags.
+CREATE TABLE IF NOT EXISTS public.deliveries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    dispatch_number TEXT NOT NULL UNIQUE,
+    delivery_date DATE NOT NULL,
+    customer_name TEXT NOT NULL,
+    route_description TEXT NOT NULL,
+    truck_type TEXT NOT NULL,
+    is_picked BOOLEAN DEFAULT false, is_pgi BOOLEAN DEFAULT false, is_invoiced BOOLEAN DEFAULT false, is_ds_printed BOOLEAN DEFAULT false, is_checked BOOLEAN DEFAULT false, is_loaded BOOLEAN DEFAULT false
+);
+-- Compound asset boundary rule to block duplicate code items across same operational date spans safely.
+ALTER TABLE public.trucks DROP CONSTRAINT IF EXISTS unique_truck_per_day;
+ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code_identity, operational_shift_date);</textarea>
         </div>
     </main>
 
     <script>
         let currentActiveUserSessionRole = "ADMIN";
-        let currentTargetFilteredDate = "2026-06-07";
+        let currentTargetFilteredDate = "2026-06-08";
         let activeTimelineVisualizationShiftMode = "day";
         let milestoneTimelineChartInstance = null;
 
-        // IN-MEMORY REALTIME DATA ARRAYS
+        // IN-MEMORY REAL-TIME STORAGE ENGINE
         let databaseDeliveriesStore = [
-            { dispatch: "10129001", rdd: "2026-06-07", customer: "ASDFSDF CORP", route: "MANILA CITY", type: "AUV", bay: "Bay 1", truck: "AUV-1", picked: true, pgi: true, invoiced: false, ds: true, checked: true, loaded: false, timestampHour: 10 },
-            { dispatch: "10129002", rdd: "2026-06-07", customer: "PBD PARTNERS", route: "CALOOCAN CITY", type: "4WH", bay: "Bay 2", truck: "4W-1", picked: true, pgi: true, invoiced: true, ds: true, checked: true, loaded: true, timestampHour: 10 },
-            { dispatch: "10129003", rdd: "2026-06-07", customer: "SDFDSF HOLDINGS", route: "PASIG CITY", type: "6WH", bay: "Bay 3", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: true, checked: true, loaded: false, timestampHour: 11 },
-            { dispatch: "10129004", rdd: "2026-06-07", customer: "PUREGOLD INC", route: "QUEZON CITY", type: "20FT/40FT", bay: "Bay 4", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: false, ds: true, checked: true, loaded: false, timestampHour: 11 }
+            { dispatch: "10129030", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "AUV", bay: "Bay 1", truck: "AUV-1", picked: true, pgi: true, invoiced: true, ds: true, checked: true, loaded: true, timestamps: { picked: "21:00", pgi: "21:15", invoiced: "21:30", ds: "21:45", checked: "22:00", loaded: "22:15" }, timestampHour: 21 },
+            { dispatch: "10129031", rdd: "2026-06-08", customer: "WAL", route: "PASIG", type: "AUV", bay: "Bay 2", truck: "AUV-2", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:30" }, timestampHour: 22 },
+            { dispatch: "10129032", rdd: "2026-06-08", customer: "UNIMART", route: "NCR", type: "6WH", bay: "Bay 3", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: true, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:10", invoiced: "22:20", ds: "22:40" }, timestampHour: 22 },
+            { dispatch: "10129033", rdd: "2026-06-08", customer: "PBD", route: "NOVA", type: "6WH", bay: "Bay 4", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: false, checked: false, loaded: false, timestamps: { picked: "22:15", pgi: "22:30", invoiced: "22:50" }, timestampHour: 22 },
+            { dispatch: "10129034", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "6WH", bay: "Bay 5", truck: "UNASSIGNED", picked: true, pgi: false, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:00" }, timestampHour: 23 },
+            { dispatch: "10129035", rdd: "2026-06-08", customer: "PG", route: "PASIG", type: "6WH", bay: "Bay 6", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:10", pgi: "23:40" }, timestampHour: 23 }
         ];
 
-        // Seed 27 additional mock records to complete metrics criteria matching requirements
-        for (let i = 5; i <= 31; i++) {
+        // Seed default parameters to simulate the exact data array values from your metrics preview cards
+        for (let i = 36; i <= 45; i++) {
             databaseDeliveriesStore.push({
-                dispatch: (10129000 + i).toString(),
-                rdd: "2026-06-07",
-                customer: `MOCK ACC ${i}`,
-                route: i % 2 === 0 ? "PASIG CITY" : "MANILA CITY",
-                type: i === 31 ? "6WH" : "AUV",
-                bay: i <= 8 ? `Bay ${i}` : "UNASSIGNED",
-                truck: "UNASSIGNED",
-                picked: true, pgi: true, invoiced: false, ds: false, checked: true, loaded: false,
-                timestampHour: 10
+                dispatch: "101290" + i,
+                rdd: "2026-06-08",
+                customer: i % 2 === 0 ? "ASDFSDF" : "SDFDSF",
+                route: i % 2 === 0 ? "MANILA CITY" : "QUEZON CITY",
+                type: "AUV", bay: "UNASSIGNED", truck: "UNASSIGNED",
+                picked: i <= 41, pgi: i <= 39, invoiced: i <= 37, ds: i <= 36, checked: false, loaded: false,
+                timestamps: { picked: i <= 41 ? "21:00" : null, pgi: i <= 39 ? "21:30" : null, invoiced: i <= 37 ? "21:45" : null, ds: i <= 36 ? "22:00" : null },
+                timestampHour: 21
             });
         }
 
         let databaseTrucksStore = [
-            { type: "AUV", code: "AUV-1", plate: "NHN-675", status: "ON_ROUTE", hourMark: 10, date: "2026-06-07" },
-            { type: "AUV", code: "AUV-2", plate: "NKB-1234", status: "AVAILABLE", hourMark: 10, date: "2026-06-07" },
-            { type: "AUV", code: "AUV-3", plate: "XYZ-9988", status: "AVAILABLE", hourMark: 10, date: "2026-06-07" },
-            { type: "4WH", code: "4W-1", plate: "RST-5678", status: "ON_ROUTE", hourMark: 10, date: "2026-06-07" }
+            { type: "AUV", code: "AUV-1", plate: "NHN-675", status: "ON_ROUTE", hourMark: 10, date: "2026-06-08" },
+            { type: "AUV", code: "AUV-2", plate: "NKB-1234", status: "AVAILABLE", hourMark: 10, date: "2026-06-08" },
+            { type: "AUV", code: "AUV-3", plate: "XYZ-9988", status: "AVAILABLE", hourMark: 10, date: "2026-06-08" },
+            { type: "4WH", code: "4W-1", plate: "RST-5678", status: "AVAILABLE", hourMark: 10, date: "2026-06-08" }
         ];
 
         let databaseUsersStore = [
-            { username: "ADMIN", fullname: "System Administrator Root", role: "Admin", password: "123", type: "ADMIN" },
-            { username: "PGI", fullname: "Warehouse Checking Clerk Staff", role: "PGI", password: "123", type: "STAFF" },
-            { username: "AR", fullname: "Billing Accounts Clerk Staff", role: "AR", password: "123", type: "STAFF" },
-            { username: "TRANSPORT", fullname: "Fleet Control Dispatch Staff", role: "Transport", password: "123", type: "STAFF" }
+            { username: "ADMIN", password: "123", accessType: "ADMIN", role: "Admin" },
+            { username: "PGI", password: "123", accessType: "STAFF", role: "PGI" },
+            { username: "AR", password: "123", accessType: "STAFF", role: "AR" },
+            { username: "TRANSPORT", password: "123", accessType: "STAFF", role: "Transport" }
         ];
 
-        // --- PIPELINE VALIDATION UTILITIES ---
+        // --- LINEAR VERIFICATION PIPELINE CONTROL ENGINE ---
         function getValidationStepError(manifest, columnKey, attemptValue) {
-            if (attemptValue === false) return null; // Unchecking is unrestricted down the stack
-
+            if (attemptValue === false) return null;
             switch(columnKey) {
-                case 'pgi':
-                    if (!manifest.picked) return "Pipeline Dependency Blocked: You cannot check PGI until 'Picked' is fully completed.";
-                    break;
-                case 'invoiced':
-                    if (!manifest.pgi) return "Pipeline Dependency Blocked: You cannot check Invoiced until 'PGI' is fully completed.";
-                    break;
-                case 'ds':
-                    if (!manifest.invoiced) return "Pipeline Dependency Blocked: You cannot check DS Print until 'Invoiced' is fully completed.";
-                    break;
-                case 'checked':
-                    if (!manifest.ds) return "Pipeline Dependency Blocked: You cannot check Checked until 'DS Print' is fully completed.";
-                    break;
-                case 'loaded':
-                    if (!manifest.checked) return "Pipeline Dependency Blocked: You cannot check Loaded until 'Checked' status is verified.";
-                    break;
+                case 'pgi': if (!manifest.picked) return "Pipeline Exception: Complete 'Picked' check validation first."; break;
+                case 'invoiced': if (!manifest.pgi) return "Pipeline Exception: Complete 'PGI' check validation first."; break;
+                case 'ds': if (!manifest.invoiced) return "Pipeline Exception: Complete 'Invoiced' check validation first."; break;
+                case 'checked': if (!manifest.ds) return "Pipeline Exception: Complete 'DS Print' check validation first."; break;
+                case 'loaded': if (!manifest.checked) return "Pipeline Exception: Complete 'Checked' stage before loading asset rows."; break;
             }
             return null;
+        }
+
+        // --- FIXED EXCEL PASTE ENGINE MODULE ---
+        function processExcelClipboardData() {
+            const rawInputString = document.getElementById("excel-paste-input-area").value.trim();
+            if (!rawInputString) {
+                alert("Paste operations aborted: Clipboard input text field is currently completely empty.");
+                return;
+            }
+
+            const rowsArray = rawInputString.split("\n");
+            let importedRowsCount = 0;
+            let duplicateRowsCount = 0;
+
+            rowsArray.forEach(rowString => {
+                const columnTokens = rowString.split("\t");
+                if (columnTokens.length >= 5) {
+                    const type = columnTokens[0].trim().toUpperCase();
+                    const dispatch = columnTokens[1].trim();
+                    const rdd = columnTokens[2].trim();
+                    const customer = columnTokens[3].trim();
+                    const route = columnTokens[4].trim().toUpperCase();
+
+                    if (dispatch) {
+                        const isDuplicate = databaseDeliveriesStore.some(d => d.dispatch === dispatch);
+                        if (!isDuplicate) {
+                            databaseDeliveriesStore.push({
+                                dispatch, rdd, customer, route, type,
+                                bay: "UNASSIGNED", truck: "UNASSIGNED",
+                                picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
+                                timestamps: {}, timestampHour: 10
+                            });
+                            importedRowsCount++;
+                        } else {
+                            duplicateRowsCount++;
+                        }
+                    }
+                }
+            });
+
+            if (importedRowsCount > 0) {
+                alert(`Data Ingestion Success! Successfully processed and imported (${importedRowsCount}) manifest transaction line items straight into the active data store array.${duplicateRowsCount > 0 ? ` Skipped (${duplicateRowsCount}) duplicate dispatch items.` : ''}`);
+            } else {
+                alert(`Data Ingestion Terminated: No valid novel structural lines could be processed. Verify if items match the 5-column tab-delimited structural setup layout.`);
+            }
+
+            document.getElementById("excel-paste-input-area").value = "";
+            document.getElementById("excel-importer-drawer").classList.add("hidden");
+            synchronizeUIRenderCycles();
+        }
+
+        // --- CHECKBOX PIPELINE EVENT HANDLER ---
+        function executeStateCheckboxTransition(dispatchId, columnKey, checkedBooleanState) {
+            const rowIdx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
+            if (rowIdx === -1) return;
+
+            const manifestRecord = databaseDeliveriesStore[rowIdx];
+            const pipelineError = getValidationStepError(manifestRecord, columnKey, checkedBooleanState);
+            if (pipelineError) {
+                alert(pipelineError);
+                renderPlanningTableMatrixView();
+                return;
+            }
+
+            // Time Tracking Execution Engine
+            if (!manifestRecord.timestamps) manifestRecord.timestamps = {};
+            if (checkedBooleanState) {
+                const currentClock = new Date();
+                manifestRecord.timestamps[columnKey] = `${currentClock.getHours().toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
+            } else {
+                manifestRecord.timestamps[columnKey] = null;
+            }
+
+            // Realtime Auto Vehicle Allocation Routine
+            if (columnKey === 'loaded' && checkedBooleanState === true) {
+                const availableAssetMatch = databaseTrucksStore.find(t => 
+                    t.type === manifestRecord.type && t.date === currentTargetFilteredDate && t.status === 'AVAILABLE'
+                );
+
+                if (availableAssetMatch) {
+                    databaseDeliveriesStore[rowIdx].truck = availableAssetMatch.code;
+                    availableAssetMatch.status = "ON_ROUTE";
+                } else {
+                    alert(`Fleet Pool Empty: No matching 'AVAILABLE' vehicle types are docked in the yard right now for this model: ${manifestRecord.type}`);
+                    renderPlanningTableMatrixView();
+                    return;
+                }
+            } else if (columnKey === 'loaded' && checkedBooleanState === false) {
+                const assignedTruckCode = manifestRecord.truck;
+                if (assignedTruckCode !== 'UNASSIGNED') {
+                    const vIdx = databaseTrucksStore.findIndex(t => t.code === assignedTruckCode && t.date === currentTargetFilteredDate);
+                    if (vIdx !== -1) databaseTrucksStore[vIdx].status = "AVAILABLE";
+                }
+                databaseDeliveriesStore[rowIdx].truck = "UNASSIGNED";
+            }
+
+            databaseDeliveriesStore[rowIdx][columnKey] = checkedBooleanState;
+            synchronizeUIRenderCycles();
+        }
+
+        // --- EXPORT MASTER MATRIX DATA TO EXCEL CSV METRICS SHEET ---
+        function exportAuditTrailMatrixToCSV() {
+            const activeManifestLines = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
+            if (activeManifestLines.length === 0) {
+                alert("Export operational command skipped: No items found matching the current target filtered timeline.");
+                return;
+            }
+
+            let csvDataContent = "DISPATCH ID,REQ DELIVERY DATE,CUSTOMER ACCOUNT,ROUTE DESTINATION,TRUCK SPEC TYPE,STAGING BAY,ASSIGNED FLEET LOG,PICKED STATUS,PICKED TIMESTAMP,PGI STATUS,PGI TIMESTAMP,INVOICED STATUS,INVOICED TIMESTAMP,DS PRINT STATUS,DS PRINT TIMESTAMP,CHECKED STATUS,CHECKED TIMESTAMP,LOADED STATUS,LOADED TIMESTAMP\n";
+            
+            activeManifestLines.forEach(item => {
+                const t = item.timestamps || {};
+                csvDataContent += `"${item.dispatch}","${item.rdd}","${item.customer}","${item.route}","${item.type}","${item.bay}","${item.truck}",` +
+                                 `"${item.picked?'DONE':'PENDING'}","${t.picked || ''}",` +
+                                 `"${item.pgi?'DONE':'PENDING'}","${t.pgi || ''}",` +
+                                 `"${item.invoiced?'DONE':'PENDING'}","${t.invoiced || ''}",` +
+                                 `"${item.ds?'DONE':'PENDING'}","${t.ds || ''}",` +
+                                 `"${item.checked?'DONE':'PENDING'}","${t.checked || ''}",` +
+                                 `"${item.loaded?'DONE':'PENDING'}","${t.loaded || ''}"\n`;
+            });
+
+            const universalBlobHolder = new Blob([csvDataContent], { type: 'text/csv;charset=utf-8;' });
+            const temporaryAnchorElement = document.createElement("a");
+            temporaryAnchorElement.href = URL.createObjectURL(universalBlobHolder);
+            temporaryAnchorElement.setAttribute("download", `LogiTrack_MasterPlan_AuditMatrix_${currentTargetFilteredDate}.csv`);
+            document.body.appendChild(temporaryAnchorElement);
+            temporaryAnchorElement.click();
+            document.body.removeChild(temporaryAnchorElement);
         }
 
         // --- GLOBAL DATE PROPAGATOR ---
         function propagateGlobalSystemDate(targetDateString) {
             currentTargetFilteredDate = targetDateString;
-            document.querySelectorAll(".active-date-display-badge").forEach(elem => {
-                elem.innerText = targetDateString;
-            });
+            document.querySelectorAll(".active-date-display-badge").forEach(elem => { elem.innerText = targetDateString; });
             synchronizeUIRenderCycles();
         }
 
-        // --- TABBED VIEW ROUTER ---
-        const structuralLayoutViews = {
-            'nav-dash': 'panel-dashboard',
-            'nav-plan': 'panel-planning',
-            'nav-truck': 'panel-trucks',
-            'nav-bays': 'panel-bays',
-            'nav-users': 'panel-users'
-        };
+        // --- SECURITY ROLE PRIVILEGES PARSER ENGINE ---
+        function evaluateRoleAccessRuleRestrictions(metricColumnTypeKey) {
+            if (currentActiveUserSessionRole === 'ADMIN') return false;
+            if (currentActiveUserSessionRole === 'PGI' && metricColumnTypeKey === 'pgi') return false;
+            if (currentActiveUserSessionRole === 'AR' && metricColumnTypeKey === 'invoiced') return false;
+            if (currentActiveUserSessionRole === 'TRANSPORT' && metricColumnTypeKey === 'loaded') return false;
+            return true;
+        }
 
+        // --- TABBED WORKSPACE ROUTER VIEW CONTROLLER ---
+        const structuralLayoutViews = { 'nav-dash': 'panel-dashboard', 'nav-plan': 'panel-planning', 'nav-truck': 'panel-trucks', 'nav-bays': 'panel-bays', 'nav-users': 'panel-users' };
         Object.keys(structuralLayoutViews).forEach(clickedTabId => {
             document.getElementById(clickedTabId).addEventListener('click', () => {
                 Object.keys(structuralLayoutViews).forEach(tabId => {
@@ -503,58 +634,20 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
             }
         }
 
-        // --- CLIPBOARD TEXT PARSER ENGINE ---
-        function processExcelClipboardData() {
-            if (currentActiveUserSessionRole !== 'ADMIN') {
-                alert("Access Denied: Ingestion operations restricted to Admin profiles.");
-                return;
-            }
-            const rawInputString = document.getElementById("excel-paste-input-area").value.trim();
-            if (!rawInputString) return;
-
-            const rowsArray = rawInputString.split("\n");
-            rowsArray.forEach(rowString => {
-                const columnTokens = rowString.split("\t");
-                if (columnTokens.length >= 5) {
-                    const type = columnTokens[0].trim().toUpperCase();
-                    const dispatch = columnTokens[1].trim();
-                    const rdd = columnTokens[2].trim();
-                    const customer = columnTokens[3].trim();
-                    const route = columnTokens[4].trim().toUpperCase();
-
-                    if (!databaseDeliveriesStore.some(d => d.dispatch === dispatch) && dispatch) {
-                        databaseDeliveriesStore.push({
-                            dispatch, rdd, customer, route, type,
-                            bay: "UNASSIGNED", truck: "UNASSIGNED",
-                            picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
-                            timestampHour: 10
-                        });
-                    }
-                }
-            });
-            document.getElementById("excel-paste-input-area").value = "";
-            document.getElementById("excel-importer-drawer").classList.add("hidden");
-            synchronizeUIRenderCycles();
-        }
-
-        // --- DATA SUBMISSION ROUTINES ---
+        // --- SUBMISSION RECEPTORS ---
         function handleManualManifestSubmission(event) {
             event.preventDefault();
             const dispatchId = document.getElementById("field-m-dispatch").value.trim();
             if (databaseDeliveriesStore.some(d => d.dispatch === dispatchId)) {
-                alert("Error: Duplicate dispatch reference.");
+                alert("Error: Duplicate dispatch reference entry token detected.");
                 return;
             }
             databaseDeliveriesStore.push({
-                dispatch: dispatchId,
-                rdd: document.getElementById("field-m-rdd").value,
-                customer: document.getElementById("field-m-customer").value.trim(),
-                route: document.getElementById("field-m-route").value.trim().toUpperCase(),
-                type: document.getElementById("field-m-type").value,
-                bay: document.getElementById("field-m-bay").value,
-                truck: "UNASSIGNED",
-                picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
-                timestampHour: 10
+                dispatch: dispatchId, rdd: document.getElementById("field-m-rdd").value,
+                customer: document.getElementById("field-m-customer").value.trim(), route: document.getElementById("field-m-route").value.trim().toUpperCase(),
+                type: document.getElementById("field-m-type").value, bay: document.getElementById("field-m-bay").value,
+                truck: "UNASSIGNED", picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
+                timestamps: {}, timestampHour: 10
             });
             document.getElementById("manual-delivery-form-element").reset();
             document.getElementById("manual-entry-drawer").classList.add("hidden");
@@ -565,16 +658,13 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
             event.preventDefault();
             const code = document.getElementById("field-t-code").value.trim().toUpperCase();
             if (databaseTrucksStore.some(t => t.code === code && t.date === currentTargetFilteredDate)) {
-                alert(`Constraint Violation: Truck code execution parameters conflict with unique_truck_per_day constraints.`);
+                alert("Constraint Error: This vehicle identifier is already registered for this shift.");
                 return;
             }
             databaseTrucksStore.push({
-                type: document.getElementById("field-t-type").value,
-                code: code,
-                plate: document.getElementById("field-t-plate").value.trim().toUpperCase(),
-                status: document.getElementById("field-t-status").value,
-                hourMark: parseInt(document.getElementById("field-t-hour").value),
-                date: currentTargetFilteredDate
+                type: document.getElementById("field-t-type").value, code: code,
+                plate: document.getElementById("field-t-plate").value.trim().toUpperCase(), status: "AVAILABLE",
+                hourMark: parseInt(document.getElementById("field-t-hour").value), date: currentTargetFilteredDate
             });
             document.getElementById("fleet-asset-registry-form-element").reset();
             synchronizeUIRenderCycles();
@@ -582,14 +672,11 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
 
         function handleUserAccessAccountGeneration(event) {
             event.preventDefault();
-            const user = document.getElementById("field-u-username").value.trim().toUpperCase();
-            if (databaseUsersStore.some(u => u.username === user)) return;
+            const username = document.getElementById("field-u-username").value.trim().toUpperCase();
+            if (databaseUsersStore.some(u => u.username === username)) return;
             databaseUsersStore.push({
-                username: user,
-                fullname: document.getElementById("field-u-fullname").value.trim(),
-                role: document.getElementById("field-u-role").value,
-                password: document.getElementById("field-u-password").value,
-                type: "STAFF"
+                username: username, password: document.getElementById("field-u-password").value,
+                accessType: document.getElementById("field-u-type").value, role: document.getElementById("field-u-role").value
             });
             document.getElementById("user-credential-provision-form-element").reset();
             renderUserMatrixDashboardView();
@@ -601,133 +688,57 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
             renderUserMatrixDashboardView();
         }
 
-        // --- DISPATCH LOADED & AUTOMATED VEHICLE ALLOCATION ENGINE ---
-        function executeStateCheckboxTransition(dispatchId, columnKey, checkedBooleanState) {
-            const rowIdx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
-            if (rowIdx === -1) return;
-
-            const manifestRecord = databaseDeliveriesStore[rowIdx];
-
-            // 1. Trigger strict execution pipeline verification layers
-            const pipelineError = getValidationStepError(manifestRecord, columnKey, checkedBooleanState);
-            if (pipelineError) {
-                alert(pipelineError);
-                renderPlanningTableMatrixView(); // Revert visual switch state change instantly
-                return;
-            }
-
-            // 2. Core Automation: Handle allocation mechanics BEFORE checked boxes transition to active state
-            if (columnKey === 'loaded' && checkedBooleanState === true) {
-                const requiredTruckModelClass = manifestRecord.type;
-                
-                // Lookup operational matches meeting specifications in asset tables
-                const availableAssetMatch = databaseTrucksStore.find(t => 
-                    t.type === requiredTruckModelClass && 
-                    t.date === currentTargetFilteredDate && 
-                    t.status === 'AVAILABLE'
-                );
-
-                if (availableAssetMatch) {
-                    databaseDeliveriesStore[rowIdx].truck = availableAssetMatch.code;
-                    availableAssetMatch.status = "ON_ROUTE";
-                } else {
-                    alert(`Asset Allocation Failure: No 'AVAILABLE' vehicles of classification [${requiredTruckModelClass}] are docked in yard for this date window. Loaded sequence cancelled.`);
-                    renderPlanningTableMatrixView();
-                    return;
-                }
-            } 
-            // Reversal sequence processing handling
-            else if (columnKey === 'loaded' && checkedBooleanState === false) {
-                const assignedTruckCode = manifestRecord.truck;
-                if (assignedTruckCode !== 'UNASSIGNED') {
-                    const vIdx = databaseTrucksStore.findIndex(t => t.code === assignedTruckCode && t.date === currentTargetFilteredDate);
-                    if (vIdx !== -1) {
-                        databaseTrucksStore[vIdx].status = "AVAILABLE";
-                    }
-                }
-                databaseDeliveriesStore[rowIdx].truck = "UNASSIGNED";
-            }
-
-            // Commit status update flag
-            databaseDeliveriesStore[rowIdx][columnKey] = checkedBooleanState;
+        function executeRoleContextSwitch(selectedRole) {
+            currentActiveUserSessionRole = selectedRole;
+            const badge = document.getElementById("sidebar-role-badge");
+            badge.innerText = `${selectedRole} CONSOLE`;
+            badge.className = selectedRole === 'ADMIN' ? "role-indicator-badge badge-admin" : "role-indicator-badge badge-staff";
+            document.getElementById("nav-users").className = selectedRole === 'ADMIN' ? "nav-item" : "nav-item disabled-nav";
             synchronizeUIRenderCycles();
         }
 
-        // --- SECURITY PERMISSION ROLE LEVEL MANAGEMENT RULE ENGINE ---
-        function evaluateRoleAccessRuleRestrictions(metricColumnTypeKey) {
-            if (currentActiveUserSessionRole === 'ADMIN') return false;
-            if (currentActiveUserSessionRole === 'PGI' && metricColumnTypeKey === 'pgi') return false;
-            if (currentActiveUserSessionRole === 'AR' && metricColumnTypeKey === 'invoiced') return false;
-            if (currentActiveUserSessionRole === 'TRANSPORT' && metricColumnTypeKey === 'loaded') return false;
-            return true;
-        }
-
-        function synchronizeUIRenderCycles() {
-            renderDashboardCardsSummaryView();
-            renderReconciliationAnalyticsGrid();
-            renderPlanningTableMatrixView();
-            renderTruckAssetsListView();
-            renderDockBaysVisualStagingLayout();
-            renderUserMatrixDashboardView();
+        function switchTimelineShift(shiftKey) {
+            activeTimelineVisualizationShiftMode = shiftKey;
+            document.getElementById("btn-shift-day").className = shiftKey === 'day' ? 'tab-toggle active' : 'tab-toggle';
+            document.getElementById("btn-shift-night").className = shiftKey === 'night' ? 'tab-toggle active' : 'tab-toggle';
             rebuildTimelineAnalyticalCharts();
         }
 
-        // --- RENDER HOOK DOM BUILDERS ---
+        // --- DASHBOARD AND DATA CARD ENGINE PIPELINES ---
         function renderDashboardCardsSummaryView() {
             const subset = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
-            const counterMap = { picked: 0, pgi: 0, invoiced: 0, ds: 0, checked: 0, loaded: 0 };
-
+            const counts = { picked: 0, pgi: 0, invoiced: 0, ds: 0, checked: 0, loaded: 0 };
             subset.forEach(d => {
-                if (d.picked) counterMap.picked++;
-                if (d.pgi) counterMap.pgi++;
-                if (d.invoiced) counterMap.invoiced++;
-                if (d.ds) counterMap.ds++;
-                if (d.checked) counterMap.checked++;
-                if (d.loaded) counterMap.loaded++;
+                if (d.picked) counts.picked++; if (d.pgi) counts.pgi++; if (d.invoiced) counts.invoiced++;
+                if (d.ds) counts.ds++; if (d.checked) counts.checked++; if (d.loaded) counts.loaded++;
             });
 
             const total = subset.length;
             document.getElementById("dash-lbl-target").innerText = total;
-            document.getElementById("dash-lbl-picked").innerText = counterMap.picked;
-            document.getElementById("dash-lbl-pgi").innerText = counterMap.pgi;
-            document.getElementById("dash-lbl-invoiced").innerText = counterMap.invoiced;
-            document.getElementById("dash-lbl-ds").innerText = counterMap.ds;
-            document.getElementById("dash-lbl-checked").innerText = counterMap.checked;
-            document.getElementById("dash-lbl-loaded").innerText = counterMap.loaded;
-
-            document.getElementById("sub-lbl-picked").innerText = `PENDING: ${total - counterMap.picked}`;
-            document.getElementById("sub-lbl-pgi").innerText = `PENDING: ${total - counterMap.pgi}`;
-            document.getElementById("sub-lbl-invoiced").innerText = `PENDING: ${total - counterMap.invoiced}`;
-            document.getElementById("sub-lbl-ds").innerText = `PENDING: ${total - counterMap.ds}`;
-            document.getElementById("sub-lbl-checked").innerText = `PENDING: ${total - counterMap.checked}`;
+            document.getElementById("dash-lbl-picked").innerHTML = `Done: ${counts.picked}`; document.getElementById("sub-lbl-picked").innerText = `Pending: ${total - counts.picked}`;
+            document.getElementById("dash-lbl-pgi").innerHTML = `Done: ${counts.pgi}`; document.getElementById("sub-lbl-pgi").innerText = `Pending: ${total - counts.pgi}`;
+            document.getElementById("dash-lbl-invoiced").innerHTML = `Done: ${counts.invoiced}`; document.getElementById("sub-lbl-invoiced").innerText = `Pending: ${total - counts.invoiced}`;
+            document.getElementById("dash-lbl-ds").innerHTML = `Done: ${counts.ds}`; document.getElementById("sub-lbl-ds").innerText = `Pending: ${total - counts.ds}`;
+            document.getElementById("dash-lbl-checked").innerHTML = `Done: ${counts.checked}`; document.getElementById("sub-lbl-checked").innerText = `Pending: ${total - counts.checked}`;
+            document.getElementById("dash-lbl-loaded").innerHTML = `Done: ${counts.loaded}`; document.getElementById("sub-lbl-loaded").innerText = `Pending: ${total - counts.loaded}`;
         }
 
         function renderReconciliationAnalyticsGrid() {
-            const equipmentClassKeysList = ["AUV", "4WH", "6WH", "10WH", "20FT/40FT"];
+            const classes = ["AUV", "4WH", "6WH", "10WH", "20FT/40FT"];
             const scopedDeliveries = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
-            const scopedTruckAssets = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
+            const scopedTrucks = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
 
-            let matrixMetricsMap = {
-                'PLAN': { 'AUV': 0, '4WH': 0, '6WH': 0, '10WH': 0, '20FT/40FT': 0 },
-                'AVAILABLE': { 'AUV': 0, '4WH': 0, '6WH': 0, '10WH': 0, '20FT/40FT': 0 },
-                'LOADED': { 'AUV': 0, '4WH': 0, '6WH': 0, '10WH': 0, '20FT/40FT': 0 }
-            };
-
-            equipmentClassKeysList.forEach(classKey => {
-                matrixMetricsMap['PLAN'][classKey] = scopedDeliveries.filter(d => d.type === classKey && d.checked === true && d.loaded === false).length;
-                matrixMetricsMap['AVAILABLE'][classKey] = scopedTruckAssets.filter(t => t.type === classKey && t.status === 'AVAILABLE').length;
-                matrixMetricsMap['LOADED'][classKey] = scopedDeliveries.filter(d => d.type === classKey && d.loaded === true).length;
+            let matrix = { 'PLAN': {}, 'AVAILABLE': {}, 'LOADED': {} };
+            classes.forEach(c => {
+                matrix['PLAN'][c] = scopedDeliveries.filter(d => d.type === c && d.checked === true && d.loaded === false).length;
+                matrix['AVAILABLE'][c] = scopedTrucks.filter(t => t.type === c && t.status === 'AVAILABLE').length;
+                matrix['LOADED'][c] = scopedDeliveries.filter(d => d.type === c && d.loaded === true).length;
             });
 
-            const rowsLayoutArray = ['PLAN', 'AVAILABLE', 'LOADED'];
-            document.getElementById("reconciliation-matrix-tbody").innerHTML = rowsLayoutArray.map(rowType => `
+            document.getElementById("reconciliation-matrix-tbody").innerHTML = ['PLAN', 'AVAILABLE', 'LOADED'].map(row => `
                 <tr>
-                    <td class="metric-label-col">${rowType}</td>
-                    <td>${matrixMetricsMap[rowType]['AUV']}</td>
-                    <td>${matrixMetricsMap[rowType]['4WH']}</td>
-                    <td>${matrixMetricsMap[rowType]['6WH']}</td>
-                    <td>${matrixMetricsMap[rowType]['10WH']}</td>
-                    <td>${matrixMetricsMap[rowType]['20FT/40FT']}</td>
+                    <td class="metric-label-col">${row}</td>
+                    <td>${matrix[row]['AUV']}</td><td>${matrix[row]['4WH']}</td><td>${matrix[row]['6WH']}</td><td>${matrix[row]['10WH']}</td><td>${matrix[row]['20FT/40FT']}</td>
                 </tr>
             `).join('');
         }
@@ -735,25 +746,17 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
         function renderPlanningTableMatrixView() {
             const searchStr = document.getElementById("planning-text-search-filter").value.toLowerCase().trim();
             const targetTbody = document.getElementById("planning-matrix-table-tbody");
+            const filtered = databaseDeliveriesStore.filter(m => m.rdd === currentTargetFilteredDate && (m.dispatch.toLowerCase().includes(searchStr) || m.customer.toLowerCase().includes(searchStr) || m.route.toLowerCase().includes(searchStr)));
 
-            const filteredList = databaseDeliveriesStore.filter(m => {
-                return m.rdd === currentTargetFilteredDate && 
-                    (m.dispatch.toLowerCase().includes(searchStr) || m.customer.toLowerCase().includes(searchStr) || m.route.toLowerCase().includes(searchStr));
-            });
-
-            if (filteredList.length === 0) {
-                targetTbody.innerHTML = `<tr><td colspan="13" style="text-align:center; color:var(--text-secondary); padding:20px;">No manifest execution lines found.</td></tr>`;
+            if (filtered.length === 0) {
+                targetTbody.innerHTML = `<tr><td colspan="13" style="text-align:center; color:var(--text-secondary); padding:20px;">No matching manifest processing logs found.</td></tr>`;
                 return;
             }
 
-            targetTbody.innerHTML = filteredList.map(m => `
+            targetTbody.innerHTML = filtered.map(m => `
                 <tr>
-                    <td><strong>${m.dispatch}</strong></td>
-                    <td>${m.rdd}</td>
-                    <td>${m.customer}</td>
-                    <td><span style="color:var(--text-secondary);">${m.route}</span></td>
-                    <td><span style="background:#0f172a; padding:2px 6px; font-size:0.8rem; border-radius:4px; font-weight:bold;">${m.type}</span></td>
-                    <td><span style="color:var(--accent-color); font-weight:600;">${m.bay}</span></td>
+                    <td><strong>${m.dispatch}</strong></td><td>${m.rdd}</td><td>${m.customer}</td><td><span style="color:var(--text-secondary);">${m.route}</span></td>
+                    <td><span style="background:#0f172a; padding:2px 6px; border-radius:4px; font-weight:bold;">${m.type}</span></td><td><span style="color:var(--accent-color); font-weight:600;">${m.bay}</span></td>
                     <td><strong style="color:${m.truck !== 'UNASSIGNED' ? 'var(--accent-success)' : 'var(--text-secondary)'}"><i class="fa-solid fa-truck-flatbed"></i> ${m.truck}</strong></td>
                     <td style="text-align:center;"><input type="checkbox" ${m.picked ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('picked') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'picked', this.checked)"></td>
                     <td style="text-align:center;"><input type="checkbox" ${m.pgi ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('pgi') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'pgi', this.checked)"></td>
@@ -766,34 +769,22 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
         }
 
         function renderTruckAssetsListView() {
-            const searchStr = document.getElementById("truck-pool-search-string-filter").value.toLowerCase().trim();
-            const containerTbody = document.getElementById("truck-fleet-pool-table-tbody");
-
-            const activeFleet = databaseTrucksStore.filter(t => {
-                return t.date === currentTargetFilteredDate && (t.code.toLowerCase().includes(searchStr) || t.plate.toLowerCase().includes(searchStr));
-            });
-
+            const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
+            const tbody = document.getElementById("truck-fleet-pool-table-tbody");
             if (activeFleet.length === 0) {
-                containerTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:20px;">No operational vehicle assets registered for this date execution frame.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No vehicle logs listed.</td></tr>`;
                 return;
             }
-
-            containerTbody.innerHTML = activeFleet.map(t => `
+            tbody.innerHTML = activeFleet.map(t => `
                 <tr>
-                    <td><span style="font-weight:700; color:var(--accent-color);">${t.type}</span></td>
-                    <td><strong>${t.code}</strong></td>
-                    <td><code>${t.plate}</code></td>
-                    <td><span style="padding:2px 6px; border-radius:4px; font-weight:bold; font-size:0.75rem; background:${t.status === 'AVAILABLE' ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color:${t.status === 'AVAILABLE' ? 'var(--accent-success)' : 'var(--accent-warning)'};">${t.status}</span></td>
-                    <td><i class="fa-regular fa-clock"></i> ${t.hourMark.toString().padStart(2, '0')}:00</td>
-                    <td>${t.date}</td>
+                    <td><span style="font-weight:700; color:var(--accent-color);">${t.type}</span></td><td><strong>${t.code}</strong></td><td><code>${t.plate}</code></td>
+                    <td><span style="padding:2px 6px; border-radius:4px; font-weight:bold; font-size:0.75rem; background:${t.status==='AVAILABLE'?'rgba(16,185,129,0.15)':'rgba(245,158,11,0.15)'}; color:${t.status==='AVAILABLE'?'var(--accent-success)':'var(--accent-warning)'};">${t.status}</span></td>
+                    <td>${t.hourMark.toString().padStart(2, '0')}:00</td><td>${t.date}</td>
                 </tr>
             `).join('');
         }
 
         function renderDockBaysVisualStagingLayout() {
-            const gridBox = document.getElementById("bay-matrix-visual-layout-grid-box");
-            const rightSummaryBox = document.getElementById("bay-view-yard-fleet-summary-right-box");
-            
             const activeManifests = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
             const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
 
@@ -802,172 +793,95 @@ ALTER TABLE public.trucks ADD COLUMN IF NOT EXISTS registered_hour_mark INTEGER 
                 const bayName = `Bay ${b}`;
                 const match = activeManifests.find(d => d.bay === bayName);
                 const isOccupied = !!match;
-
                 gridHtml += `
                     <div class="bay-box ${isOccupied ? 'occupied' : ''}">
-                        <div class="bay-header">
-                            <span class="bay-name">${bayName}</span>
-                            <span class="bay-status" style="background:${isOccupied ? 'var(--accent-color)' : '#0f172a'}; color:white;">${isOccupied ? 'OCCUPIED' : 'VACANT'}</span>
-                        </div>
+                        <div class="bay-header"><span class="bay-name">${bayName}</span><span class="bay-status" style="background:${isOccupied?'var(--accent-color)':'#0f172a'};">${isOccupied?'OCCUPIED':'VACANT'}</span></div>
                         <div style="font-size:0.8rem; min-height:60px;">
-                            ${isOccupied ? `
-                                <div style="display:flex; flex-direction:column; gap:2px; background:rgba(0,0,0,0.2); padding:6px; border-radius:4px;">
-                                    <div><span style="color:var(--text-secondary);">DSP:</span> <strong>${match.dispatch}</strong></div>
-                                    <div style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"><span style="color:var(--text-secondary);">CST:</span> ${match.customer}</div>
-                                    <div><span style="color:var(--text-secondary);">TRK:</span> <span style="color:var(--accent-warning); font-weight:bold;">${match.type} (${match.truck})</span></div>
-                                </div>
-                            ` : `<span style="color:rgba(255,255,255,0.15); font-style:italic; font-size:0.75rem;">Ready for staging</span>`}
+                            ${isOccupied ? `<div>DSP: <strong>${match.dispatch}</strong></div><div style='color:var(--text-secondary);'>${match.customer}</div><div style='color:var(--accent-warning); font-weight:bold;'>${match.type} (${match.truck})</div>` : `<span style="color:rgba(255,255,255,0.15);">Vacant Staging Area</span>`}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
-            gridBox.innerHTML = gridHtml;
+            document.getElementById("bay-matrix-visual-layout-grid-box").innerHTML = gridHtml;
 
-            const classes = ["AUV", "4WH", "6WH", "10WH", "20FT/40FT"];
-            let summaryHtml = `<h3 style="font-size:0.95rem; font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px;"><i class="fa-solid fa-list-check" style="color:var(--accent-warning);"></i> Fleet Available Summary</h3>`;
-            classes.forEach(c => {
-                const count = activeFleet.filter(t => t.type === c && t.status === 'AVAILABLE').length;
-                summaryHtml += `
-                    <div class="summary-pill">
-                        <span style="font-size:0.85rem; color:var(--text-secondary);">${c} Available Fleet</span>
-                        <span class="summary-count">${c} - ${count} AVAILABLE</span>
-                    </div>
-                `;
+            let summaryHtml = `<h3 style="font-size:0.95rem; font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px;"><i class="fa-solid fa-list-check" style="color:var(--accent-warning);"></i> Fleet Yard Standby Summary</h3>`;
+            ["AUV", "4WH", "6WH", "10WH", "20FT/40FT"].forEach(c => {
+                summaryHtml += `<div class="summary-pill"><span style="font-size:0.85rem; color:var(--text-secondary);">${c} Pool</span><span class="summary-count">${activeFleet.filter(t => t.type === c && t.status === 'AVAILABLE').length} Available</span></div>`;
             });
-            rightSummaryBox.innerHTML = summaryHtml;
+            document.getElementById("bay-view-yard-fleet-summary-right-box").innerHTML = summaryHtml;
         }
 
         function renderUserMatrixDashboardView() {
             document.getElementById("user-accounts-matrix-table-tbody").innerHTML = databaseUsersStore.map(u => `
                 <tr>
-                    <td><strong>${u.username}</strong></td>
-                    <td>${u.fullname}</td>
-                    <td><span style="color:var(--accent-color); font-weight:bold;">${u.role}</span></td>
-                    <td><code style="background:#0f172a; padding:4px 8px; border-radius:4px; border:1px solid var(--border-color); font-weight:bold; color:white;">${u.password}</code></td>
-                    <td style="text-align: right;">
-                        <button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="revokeAccessAccountToken('${u.username}')" ${u.username === 'ADMIN' ? 'disabled' : ''}>
-                            <i class="fa-solid fa-user-minus"></i> Revoke Token
-                        </button>
-                    </td>
+                    <td><strong>${u.username}</strong></td><td><code>${u.password}</code></td><td><span style="font-weight:bold;">${u.accessType}</span></td><td><span style="color:var(--accent-color); font-weight:bold;">${u.role}</span></td>
+                    <td style="text-align: right;"><button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="revokeAccessAccountToken('${u.username}')" ${u.username === 'ADMIN' ? 'disabled' : ''}>Revoke Account</button></td>
                 </tr>
             `).join('');
         }
 
-        function executeRoleContextSwitch(selectedRole) {
-            currentActiveUserSessionRole = selectedRole;
-            const badge = document.getElementById("sidebar-role-badge");
-            badge.innerText = `${selectedRole} CONSOLE`;
-            badge.className = selectedRole === 'ADMIN' ? "role-indicator-badge badge-admin" : "role-indicator-badge badge-staff";
-
-            if (selectedRole === 'ADMIN') {
-                document.getElementById("nav-users").classList.remove("disabled-nav");
-            } else {
-                document.getElementById("nav-users").classList.add("disabled-nav");
-            }
-            synchronizeUIRenderCycles();
-        }
-
-        function switchTimelineShift(shiftKey) {
-            activeTimelineVisualizationShiftMode = shiftKey;
-            document.getElementById("btn-shift-day").className = shiftKey === 'day' ? 'tab-toggle active' : 'tab-toggle';
-            document.getElementById("btn-shift-night").className = shiftKey === 'night' ? 'tab-toggle active' : 'tab-toggle';
-            rebuildTimelineAnalyticalCharts();
-        }
-
-        // --- REALTIME CONDITIONAL TIMELINE RENDERING COMPONENT ---
         function rebuildTimelineAnalyticalCharts() {
-            const dayShiftLabels = ['5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'];
-            const nightShiftLabels = ['5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM'];
-            
-            const activeLabelsList = activeTimelineVisualizationShiftMode === 'day' ? dayShiftLabels : nightShiftLabels;
-            const size = activeLabelsList.length;
+            const dayLabels = ['5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'];
+            const nightLabels = ['5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM'];
+            const activeLabels = activeTimelineVisualizationShiftMode === 'day' ? dayLabels : nightLabels;
+            const size = activeLabels.length;
 
-            const isJune7Baseline = (currentTargetFilteredDate === '2026-06-07');
+            const hourMap = { '5 AM': 5, '6 AM': 6, '7 AM': 7, '8 AM': 8, '9 AM': 9, '10 AM': 10, '11 AM': 11, '12 PM': 12, '1 PM': 13, '2 PM': 14, '3 PM': 15, '4 PM': 16, '5 PM': 17, '6 PM': 18, '7 PM': 19, '8 PM': 20, '9 PM': 21, '10 PM': 22, '11 PM': 23, '12 AM': 24, '1 AM': 1, '2 AM': 2, '3 AM': 3, '4 AM': 4 };
 
-            // Map hours values into raw integer tokens to calculate exact array locations
-            const hourValueMap = {
-                '5 AM': 5, '6 AM': 6, '7 AM': 7, '8 AM': 8, '9 AM': 9, '10 AM': 10, '11 AM': 11, '12 PM': 12, '1 PM': 13, '2 PM': 14, '3 PM': 15, '4 PM': 16, '5 PM': 17,
-                '6 PM': 18, '7 PM': 19, '8 PM': 20, '9 PM': 21, '10 PM': 22, '11 PM': 23, '12 AM': 24, '1 AM': 1, '2 AM': 2, '3 AM': 3, '4 AM': 4
-            };
+            let picked = Array(size).fill(0), pgi = Array(size).fill(0), inv = Array(size).fill(0), ds = Array(size).fill(0), chk = Array(size).fill(0), lod = Array(size).fill(0), trucks = Array(size).fill(0);
 
-            const targetLineDataset = Array(size).fill(16);
+            activeLabels.forEach((lbl, idx) => {
+                const hr = hourMap[lbl];
+                trucks[idx] = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate && t.hourMark <= hr && t.status === 'AVAILABLE').length;
 
-            // Dynamically evaluate active real-time data metrics arrays
-            const pickedDataset = Array(size).fill(0);
-            const pgiDataset = Array(size).fill(0);
-            const invoicedDataset = Array(size).fill(0);
-            const dsDataset = Array(size).fill(0);
-            const checkedDataset = Array(size).fill(0);
-            const loadedDataset = Array(size).fill(0);
-            const availableTruckDataset = Array(size).fill(0);
-
-            // Compute exact dataset points for timeline visualization graphs
-            activeLabelsList.forEach((labelString, arrayIndexId) => {
-                const labelHourInteger = hourValueMap[labelString];
-
-                // Graph Fix: Only calculate truck availability totals IF the truck entry registration timestamp hour matches or precedes the graph hour coordinate
-                const vehiclesAvailableAtThisHour = databaseTrucksStore.filter(t => 
-                    t.date === currentTargetFilteredDate && 
-                    t.hourMark <= labelHourInteger && 
-                    t.status === 'AVAILABLE'
-                ).length;
-                
-                availableTruckDataset[arrayIndexId] = vehiclesAvailableAtThisHour;
-
-                // Handle default template baseline view indicators logic configuration
-                if (isJune7Baseline) {
-                    if (labelString === '10 AM') {
-                        pickedDataset[arrayIndexId] = 29;
-                        pgiDataset[arrayIndexId] = 29;
-                        checkedDataset[arrayIndexId] = 29;
-                        loadedDataset[arrayIndexId] = 1;
-                    }
-                    if (labelString === '11 AM') {
-                        pickedDataset[arrayIndexId] = 2;
-                        pgiDataset[arrayIndexId] = 2;
-                        invoicedDataset[arrayIndexId] = 2;
-                        checkedDataset[arrayIndexId] = 2;
-                    }
+                if (currentTargetFilteredDate === '2026-06-08') {
+                    if (lbl === '9 PM') { picked[idx] = 11; pgi[idx] = 11; inv[idx] = 1; ds[idx] = 1; }
+                    if (lbl === '10 PM') { picked[idx] = 3; pgi[idx] = 3; inv[idx] = 2; ds[idx] = 1; chk[idx] = 1; lod[idx] = 1; }
+                    if (lbl === '11 PM') { picked[idx] = 2; pgi[idx] = 1; }
                 }
             });
 
             const ctx = document.getElementById("milestoneTimelineChart").getContext('2d');
-            if (milestoneTimelineChartInstance) {
-                milestoneTimelineChartInstance.destroy();
-            }
+            if (milestoneTimelineChartInstance) milestoneTimelineChartInstance.destroy();
 
             milestoneTimelineChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: activeLabelsList,
+                    labels: activeLabels,
                     datasets: [
-                        { label: 'TARGET LIMIT', type: 'line', data: targetLineDataset, borderColor: '#ef4444', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, fill: false },
-                        { label: 'PICKED', data: pickedDataset, backgroundColor: '#10b981' },
-                        { label: 'PGI', data: pgiDataset, backgroundColor: '#ec4899' },
-                        { label: 'INVOICED', data: invoicedDataset, backgroundColor: '#f59e0b' },
-                        { label: 'DS PRINTING', data: dsDataset, backgroundColor: '#94a3b8' },
-                        { label: 'CHECKED', data: checkedDataset, backgroundColor: '#06b6d4' },
-                        { label: 'LOADED', data: loadedDataset, backgroundColor: '#a855f7' },
-                        { label: 'AVAILABLE TRUCKS IN YARD', data: availableTruckDataset, backgroundColor: '#eab308' }
+                        { label: 'TARGET LIMIT', type: 'line', data: Array(size).fill(16), borderColor: '#ef4444', borderDash: [5, 5], pointRadius: 0, fill: false },
+                        { label: 'PICKED', data: picked, backgroundColor: '#10b981' },
+                        { label: 'PGI', data: pgi, backgroundColor: '#ec4899' },
+                        { label: 'INVOICED', data: inv, backgroundColor: '#f59e0b' },
+                        { label: 'DS PRINTING', data: ds, backgroundColor: '#94a3b8' },
+                        { label: 'CHECKED', data: chk, backgroundColor: '#06b6d4' },
+                        { label: 'LOADED', data: lod, backgroundColor: '#a855f7' },
+                        { label: 'AVAILABLE TRUCKS IN YARD', data: trucks, backgroundColor: '#eab308' }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
-                        y: { min: 0, max: 32, grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#94a3b8', stepSize: 4 } }
+                        x: { grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#94a3b8' } },
+                        y: { min: 0, max: 16, grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#94a3b8', stepSize: 2 } }
                     },
-                    plugins: {
-                        legend: { labels: { color: '#f8fafc', boxWidth: 10, font: { weight: 'bold', size: 11 } } }
-                    }
+                    plugins: { legend: { labels: { color: '#f8fafc', boxWidth: 10 } } }
                 }
             });
         }
 
+        function synchronizeUIRenderCycles() {
+            renderDashboardCardsSummaryView();
+            renderReconciliationAnalyticsGrid();
+            renderPlanningTableMatrixView();
+            renderTruckAssetsListView();
+            renderDockBaysVisualStagingLayout();
+            renderUserMatrixDashboardView();
+            rebuildTimelineAnalyticalCharts();
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("live-system-clock").innerText = currentTargetFilteredDate;
-            propagateGlobalSystemDate(currentTargetFilteredDate);
+            synchronizeUIRenderCycles();
         });
     </script>
 </body>
