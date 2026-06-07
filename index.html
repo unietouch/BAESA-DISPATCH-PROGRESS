@@ -80,6 +80,7 @@
         .fleet-summary-right { flex: 1; background: rgba(21, 31, 50, 0.4); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 250px; }
 
         .bay-box { background: rgba(21, 31, 50, 0.3); border: 2px solid var(--border-color); border-radius: 8px; padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.2s; }
+        .bay-box.has-items { border-color: var(--accent-warning); background: rgba(245, 158, 11, 0.02); }
         .bay-box.occupied { border-color: var(--accent-color); background: rgba(59, 130, 246, 0.05); }
         .bay-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom: 8px; }
         .bay-name { font-weight: bold; color: var(--text-main); font-size: 1.05rem; }
@@ -455,7 +456,7 @@
     <div id="bay-assignment-modal-element" class="modal-overlay hidden">
         <div class="modal-card">
             <h3 style="font-size:1.1rem; font-weight:700;"><i class="fa-solid fa-warehouse" style="color:var(--accent-color);"></i> Assign Docking Bay Segment</h3>
-            <p style="font-size:0.8rem; color:var(--text-secondary);">Choose a staging bay area context mapping configuration matrix parameters for Dispatch Delivery: <strong id="modal-target-dispatch-lbl" style="color:var(--text-main);"></strong></p>
+            <p style="font-size:0.8rem; color:var(--text-secondary);">Choose a staging bay area (Max 3 dispatches per bay) for Dispatch Delivery: <strong id="modal-target-dispatch-lbl" style="color:var(--text-main);"></strong></p>
             <div class="modal-grid" id="modal-bay-buttons-layout-container"></div>
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
                 <button class="btn-secondary" onclick="closeInteractiveBayAssignmentModal()">Cancel Assignation</button>
@@ -489,11 +490,11 @@
         // SEED COMPREHENSIVE INITIAL DATA INFRASTRUCTURE MODEL LIST
         let databaseDeliveriesStore = [
             { dispatch: "10129030", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "AUV", bay: "Bay 1", truck: "AUV-1", picked: true, pgi: true, invoiced: true, ds: true, checked: true, loaded: true, timestamps: { picked: "21:00", pgi: "21:15", invoiced: "21:30", ds: "21:45", checked: "22:00", loaded: "22:15" }, timestampHour: 21 },
-            { dispatch: "10129031", rdd: "2026-06-08", customer: "WAL", route: "PASIG", type: "AUV", bay: "Bay 2", truck: "AUV-2", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:30" }, timestampHour: 22 },
-            { dispatch: "10129032", rdd: "2026-06-08", customer: "UNIMART", route: "NCR", type: "6WH", bay: "Bay 3", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: true, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:10", invoiced: "22:20", ds: "22:40" }, timestampHour: 22 },
-            { dispatch: "10129033", rdd: "2026-06-08", customer: "PBD", route: "NOVA", type: "6WH", bay: "Bay 4", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: false, checked: false, loaded: false, timestamps: { picked: "22:15", pgi: "22:30", invoiced: "22:50" }, timestampHour: 22 },
-            { dispatch: "10129034", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "6WH", bay: "Bay 5", truck: "UNASSIGNED", picked: true, pgi: false, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:00" }, timestampHour: 23 },
-            { dispatch: "10129035", rdd: "2026-06-08", customer: "PG", route: "PASIG", type: "6WH", bay: "Bay 6", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:10", pgi: "23:40" }, timestampHour: 23 }
+            { dispatch: "10129031", rdd: "2026-06-08", customer: "WAL", route: "PASIG", type: "AUV", bay: "Bay 1", truck: "AUV-2", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:30" }, timestampHour: 22 },
+            { dispatch: "10129032", rdd: "2026-06-08", customer: "UNIMART", route: "NCR", type: "6WH", bay: "Bay 1", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: true, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:10", invoiced: "22:20", ds: "22:40" }, timestampHour: 22 },
+            { dispatch: "10129033", rdd: "2026-06-08", customer: "PBD", route: "NOVA", type: "6WH", bay: "Bay 2", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: false, checked: false, loaded: false, timestamps: { picked: "22:15", pgi: "22:30", invoiced: "22:50" }, timestampHour: 22 },
+            { dispatch: "10129034", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "6WH", bay: "Bay 2", truck: "UNASSIGNED", picked: true, pgi: false, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:00" }, timestampHour: 23 },
+            { dispatch: "10129035", rdd: "2026-06-08", customer: "PG", route: "PASIG", type: "6WH", bay: "Bay 3", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:10", pgi: "23:40" }, timestampHour: 23 }
         ];
 
         // SEED CORE DEMO DATA FIELDS TO GENERATE THE GRAPH RENDER RANGE STREAKS
@@ -557,7 +558,6 @@
         function executeAdministrativeDispatchDeletion(dispatchId) {
             if (currentActiveUserSessionRole !== 'ADMIN') return;
             if (confirm(`Administrative Action Confirmation: Permanently delete dispatch manifest row item reference [${dispatchId}] from system tracking matrix?`)) {
-                // Return any assigned truck to service pool availability prior to line clearing
                 const record = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
                 if (record && record.truck !== 'UNASSIGNED') {
                     const tIdx = databaseTrucksStore.findIndex(t => t.code === record.truck && t.date === currentTargetFilteredDate);
@@ -638,19 +638,16 @@
                 return;
             }
 
-            // TRIGGER BAY INTERACTIVE POP-UP DIALOGUE ON 'CHECKED' STEP VALIDATION TRANSITION
             if (columnKey === 'checked' && checkedBooleanState === true) {
                 activeModalTargetDispatchReferenceID = dispatchId;
                 openInteractiveBayAssignmentModal(dispatchId);
                 return;
             }
 
-            // REVERT THE ASSIGNED BAY CONFIGURATION AUTOMATICALLY IF 'CHECKED' ROW GETS UNCHECKED
             if (columnKey === 'checked' && checkedBooleanState === false) {
                 databaseDeliveriesStore[rowIdx].bay = "UNASSIGNED";
             }
 
-            // ASSET VEHICLE ATTACHMENT MODAL INVOCATION ON LOADED MANIFEST EVENTS
             if (columnKey === 'loaded' && checkedBooleanState === true) {
                 openInteractiveTruckAssignmentModal(dispatchId);
                 return;
@@ -663,7 +660,6 @@
                 databaseDeliveriesStore[rowIdx].truck = "UNASSIGNED";
             }
 
-            // APPLY ACTIVE DATA MODIFICATIONS CONTEXT LOGIC
             if (!manifestRecord.timestamps) manifestRecord.timestamps = {};
             if (checkedBooleanState) {
                 const currentClock = new Date();
@@ -682,21 +678,24 @@
             const container = document.getElementById("modal-bay-buttons-layout-container");
             container.innerHTML = "";
 
-            const manifest = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
-
             for (let b = 1; b <= 8; b++) {
                 const bayName = `Bay ${b}`;
-                const isOccupiedByOther = databaseDeliveriesStore.some(d => d.bay === bayName && d.dispatch !== dispatchId && d.rdd === currentTargetFilteredDate);
+                // Count current assigned dispatches for this bay on the active target date
+                const currentBayCount = databaseDeliveriesStore.filter(d => d.bay === bayName && d.dispatch !== dispatchId && d.rdd === currentTargetFilteredDate).length;
+                const isFull = currentBayCount >= 3;
                 
                 const btn = document.createElement("button");
-                btn.className = isOccupiedByOther ? "btn-secondary" : "btn-primary";
-                if (isOccupiedByOther) btn.style.opacity = "0.4";
-                btn.innerHTML = `<i class="fa-solid fa-warehouse"></i> ${bayName} ${isOccupiedByOther ? '(Occupied)' : ''}`;
+                btn.className = isFull ? "btn-secondary" : "btn-primary";
+                if (isFull) {
+                    btn.style.opacity = "0.4";
+                    btn.style.cursor = "not-allowed";
+                }
+                btn.innerHTML = `<i class="fa-solid fa-warehouse"></i> ${bayName} (${currentBayCount}/3 Used) ${isFull ? '[FULL]' : ''}`;
                 
                 btn.onclick = () => {
-                    if (isOccupiedByOther) {
-                        if (!confirm(`${bayName} contains an active staging lot conflict. Proceed and displace cross-dock entries anyway?`)) return;
-                        databaseDeliveriesStore.forEach(d => { if(d.bay === bayName && d.rdd === currentTargetFilteredDate) d.bay = "UNASSIGNED"; });
+                    if (isFull) {
+                        alert(`Capacity Cap Fault: ${bayName} has reached its maximum allowance threshold limits (3 Dispatches Max).`);
+                        return;
                     }
                     applyBayAssignmentTransaction(dispatchId, bayName);
                 };
@@ -971,15 +970,12 @@
 
         function executeRoleContextSwitch(selectedRole) {
             currentActiveUserSessionRole = selectedRole;
-            
-            // ADMIN VIEW LAYER PRIVILEGES RESTRICTIONS
             document.getElementById("nav-users").className = selectedRole === 'ADMIN' ? "nav-item" : "nav-item disabled-nav";
             document.getElementById("field-pass-user").value = selectedRole;
-            
             synchronizeUIRenderCycles();
         }
 
-        function switchTimelineShift(shiftKey) {
+        UX_SHIFT_TOGGLE: function switchTimelineShift(shiftKey) {
             activeTimelineVisualizationShiftMode = shiftKey;
             document.getElementById("btn-shift-day").className = shiftKey === 'day' ? 'tab-toggle active' : 'tab-toggle';
             document.getElementById("btn-shift-night").className = shiftKey === 'night' ? 'tab-toggle active' : 'tab-toggle';
@@ -1043,7 +1039,6 @@
             const targetTbody = document.getElementById("planning-matrix-table-tbody");
             const filtered = databaseDeliveriesStore.filter(m => m.rdd === currentTargetFilteredDate && (m.dispatch.toLowerCase().includes(searchStr) || m.customer.toLowerCase().includes(searchStr) || m.route.toLowerCase().includes(searchStr)));
 
-            // SHOW OR HIDE SYSTEM ROW MANAGEMENT ACTIONS HEADER DEPENDING ON USER CLASS
             document.getElementById("th-planning-admin-actions").style.display = currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none';
 
             if (filtered.length === 0) {
@@ -1081,7 +1076,6 @@
             const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
             const tbody = document.getElementById("truck-fleet-pool-table-tbody");
             
-            // SHOW OR HIDE ADMINISTRATIVE REMOVAL COLUMN ACTIONS OBJECT HEADER ELEMENTS
             document.getElementById("th-truck-actions").style.display = currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none';
 
             if (activeFleet.length === 0) {
@@ -1109,13 +1103,39 @@
             let gridHtml = "";
             for (let b = 1; b <= 8; b++) {
                 const bayName = `Bay ${b}`;
-                const match = activeManifests.find(d => d.bay === bayName);
-                const isOccupied = !!match;
+                const bayMatches = activeManifests.filter(d => d.bay === bayName);
+                const itemsCount = bayMatches.length;
+                
+                let boxClass = "";
+                let statusText = "VACANT";
+                if (itemsCount >= 3) {
+                    boxClass = "occupied";
+                    statusText = "FULL";
+                } else if (itemsCount > 0) {
+                    boxClass = "has-items";
+                    statusText = `${itemsCount}/3 USED`;
+                }
+
+                let itemsDetailsHtml = "";
+                if (itemsCount > 0) {
+                    itemsDetailsHtml = bayMatches.map(m => `
+                        <div style="border-bottom:1px solid rgba(255,255,255,0.03); padding:4px 0; font-size:0.78rem;">
+                            DSP: <strong>${m.dispatch}</strong> | Acc: ${m.customer} <br>
+                            <span style="color:var(--accent-warning);"><i class="fa-solid fa-truck"></i> ${m.type} (${m.truck})</span>
+                        </div>
+                    `).join('');
+                } else {
+                    itemsDetailsHtml = `<span style="color:var(--text-secondary); opacity:0.4; font-size:0.8rem;">Vacant Cross-Dock Zone</span>`;
+                }
+
                 gridHtml += `
-                    <div class="bay-box ${isOccupied ? 'occupied' : ''}">
-                        <div class="bay-header"><span class="bay-name">${bayName}</span><span class="bay-status" style="background:${isOccupied?'var(--accent-color)':'var(--disabled-color)'};">${isOccupied?'OCCUPIED':'VACANT'}</span></div>
-                        <div style="font-size:0.8rem; min-height:60px;">
-                            ${isOccupied ? `<div>DSP: <strong>${match.dispatch}</strong></div><div style='color:var(--text-secondary);'>Account: ${match.customer}</div><div style='color:var(--accent-warning); font-weight:bold;'><i class='fa-solid fa-truck-pickup'></i> ${match.type} (${match.truck})</div>` : `<span style="color:var(--text-secondary); opacity:0.4;">Vacant Cross-Dock Zone</span>`}
+                    <div class="bay-box ${boxClass}">
+                        <div class="bay-header">
+                            <span class="bay-name">${bayName}</span>
+                            <span class="bay-status" style="background:${itemsCount === 0 ? 'var(--disabled-color)' : itemsCount >= 3 ? 'var(--accent-danger)' : 'var(--accent-warning)'}; color:${itemsCount === 0 || itemsCount >= 3 ? 'white' : 'black'}">${statusText}</span>
+                        </div>
+                        <div style="min-height:75px; display:flex; flex-direction:column; gap:4px; max-height:110px; overflow-y:auto;">
+                            ${itemsDetailsHtml}
                         </div>
                     </div>`;
             }
@@ -1198,7 +1218,6 @@
             document.getElementById("live-system-clock").innerText = currentTargetFilteredDate;
             document.getElementById("field-pass-user").value = currentActiveUserSessionRole;
 
-            // EVALUATE LOCAL STORAGE SESSIONS FOR AUTO-LOGIN ON SYSTEM REMEMBER ME HOOKS
             const rememberedRole = localStorage.getItem("logitrack_remembered_role");
             if (rememberedRole) {
                 executeRoleContextSwitch(rememberedRole);
