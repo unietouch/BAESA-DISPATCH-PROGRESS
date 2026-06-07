@@ -19,6 +19,7 @@
             --accent-warning: #f59e0b;
             --accent-danger: #ef4444;
             --disabled-color: #475569;
+            --sidebar-width: 280px;
         }
 
         [data-theme="light"] {
@@ -26,1055 +27,1159 @@
             --bg-card: #ffffff;
             --bg-sidebar: #0f172a;
             --border-color: rgba(0, 0, 0, 0.08);
-            --text-main: #0f172a;
-            --text-secondary: #475569;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
             --accent-color: #2563eb;
             --accent-success: #16a34a;
             --accent-warning: #d97706;
             --accent-danger: #dc2626;
-            --disabled-color: #cbd5e1;
+            --disabled-color: #94a3b8;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
-        
-        /* SIDEBAR STYLES */
-        aside { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; transition: width 0.3s ease; position: relative; z-index: 10; }
-        aside.collapsed { width: 70px; }
-        .sidebar-header { padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); overflow: hidden; white-space: nowrap; }
-        .logo-area { display: flex; align-items: center; gap: 12px; font-weight: bold; font-size: 1.2rem; color: #fff; }
-        .logo-area i { color: var(--accent-color); font-size: 1.5rem; }
-        aside.collapsed .logo-area span { display: none; }
-        .toggle-sidebar-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.1rem; padding: 5px; transition: transform 0.3s; }
-        aside.collapsed .toggle-sidebar-btn { transform: rotate(180deg); }
-        
-        .sidebar-menu { list-style: none; padding: 15px 0; flex-grow: 1; }
-        .sidebar-menu li { padding: 4px 12px; }
-        .sidebar-menu a { display: flex; align-items: center; gap: 15px; padding: 12px 15px; color: var(--text-secondary); text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s; white-space: nowrap; }
-        .sidebar-menu a:hover, .sidebar-menu li.active a { background-color: rgba(255, 255, 255, 0.05); color: #fff; }
-        .sidebar-menu a i { width: 20px; text-align: center; font-size: 1.1rem; }
-        [data-theme="light"] .sidebar-menu a { color: #94a3b8; }
-        [data-theme="light"] .sidebar-menu a:hover, [data-theme="light"] .sidebar-menu li.active a { background-color: rgba(255, 255, 255, 0.1); color: #fff; }
-        aside.collapsed .sidebar-menu span { display: none; }
-        
-        .sidebar-footer { padding: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; }
-        .btn-auth-trigger { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; transition: background 0.2s; }
-        .btn-auth-trigger:hover { background: rgba(255, 255, 255, 0.1); }
-        aside.collapsed .sidebar-footer span { display: none; }
 
-        /* MAIN CONTENT WORKSPACE */
-        main { flex-grow: 1; padding: 25px; display: flex; flex-direction: column; gap: 25px; min-width: 0; }
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-card); padding: 15px 25px; border-radius: 12px; border: 1px solid var(--border-color); }
-        .view-title-group h1 { font-size: 1.5rem; font-weight: 600; }
-        .view-title-group p { font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px; }
-        .navbar-controls { display: flex; align-items: center; gap: 20px; }
+        aside { width: var(--sidebar-width); background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; transition: width 0.3s, padding 0.3s; position: relative; }
+        aside.minimized { var(--sidebar-width): 80px; width: 80px; padding: 24px 12px; }
         
-        .theme-control-switch { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-secondary); }
-        .switch-track { position: relative; display: inline-block; width: 46px; height: 24px; background-color: var(--disabled-color); border-radius: 12px; cursor: pointer; }
-        .switch-track input { opacity: 0; width: 0; height: 0; }
-        .switch-thumb { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: #white; border-radius: 50%; transition: transform 0.2s; background: #fff; }
-        .switch-track input:checked + .switch-thumb { transform: translateX(22px); }
-        .switch-track input:checked { background-color: var(--accent-color); }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: bold; color: var(--accent-color); margin-bottom: 24px; overflow: hidden; white-space: nowrap; }
+        aside.minimized .brand span, aside.minimized .brand-text { display: none; }
         
-        .btn-config-trigger { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500; }
-        .btn-config-trigger:hover { background-color: rgba(255,255,255,0.03); }
+        .nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; white-space: nowrap; }
+        aside.minimized .nav-item { justify-content: center; padding: 12px; }
+        aside.minimized .nav-item span { display: none; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.02); color: var(--text-main); }
+        .nav-item.active { background: var(--accent-color); color: white; }
+        .nav-item.disabled-nav { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-        /* METRICS SUMMARY GRID */
-        .metrics-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
-        .summary-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 22px; display: flex; align-items: center; justify-content: space-between; }
-        .summary-info h3 { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .summary-info .value-display { font-size: 2rem; font-weight: 700; margin-top: 5px; }
-        .summary-info .subtext-metric { font-size: 0.75rem; margin-top: 4px; color: var(--text-secondary); }
-        .summary-icon-wrapper { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .sidebar-toggle-btn { position: absolute; top: 24px; right: -12px; background: var(--accent-color); color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 0.8rem; }
 
-        /* RECONCILIATION ANALYTICS PANELS */
-        .reconciliation-analytics-block { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        @media(max-width: 1024px) { .reconciliation-analytics-block { grid-template-columns: 1fr; } }
-        
-        .workspace-panel { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
-        .panel-header { padding: 18px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .panel-header h2 { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        .panel-header h2 i { color: var(--accent-color); }
-        
-        .chart-viewport-wrapper { padding: 20px; height: 280px; position: relative; }
-        .matrix-legend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px; border-top: 1px solid var(--border-color); background: rgba(0,0,0,0.05); }
-        .legend-item-card { display: flex; flex-direction: column; gap: 4px; padding: 8px 12px; border-left: 3px solid var(--disabled-color); }
-        .legend-title { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; }
-        .legend-value-row { display: flex; align-items: baseline; gap: 8px; }
-        .legend-big-num { font-size: 1.25rem; font-weight: 700; }
-        .legend-percentage { font-size: 0.75rem; font-weight: 600; }
+        main { flex-grow: 1; padding: 32px; max-width: 1650px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; }
+        .view-panel { background-color: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 24px; transition: background-color 0.3s, border-color 0.3s; }
+        .hidden { display: none !important; }
 
-        /* PLANNING MATRIX INTERACTIVE DATA TABLE */
-        .table-viewport-container { width: 100%; overflow-x: auto; }
-        .terminal-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        .terminal-table th, .terminal-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-        .terminal-table th { background-color: rgba(0,0,0,0.15); font-weight: 600; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        [data-theme="light"] .terminal-table th { background-color: rgba(0,0,0,0.02); }
-        .terminal-table tbody tr:hover { background-color: rgba(255,255,255,0.01); }
-        [data-theme="light"] .terminal-table tbody tr:hover { background-color: rgba(0,0,0,0.01); }
+        .kpi-row { display: flex; gap: 16px; align-items: stretch; margin-bottom: 16px; flex-wrap: wrap; }
+        .kpi-grid-left { flex: 3; display: flex; flex-direction: column; gap: 12px; min-width: 300px; }
+        .kpi-sub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         
-        /* DATA STATUS CHECKBOX FLOW UNITS */
-        .flow-checkbox-group { display: flex; align-items: center; gap: 15px; }
-        .custom-checkbox-node { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; user-select: none; }
-        .custom-checkbox-node input { width: 15px; height: 15px; accent-color: var(--accent-color); cursor: pointer; }
-        .custom-checkbox-node.checked-active { color: var(--accent-success); }
-        .custom-checkbox-node.loaded-active { color: #a855f7; }
-        
-        .badge-element { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; gap: 6px; }
-        .badge-element.unassigned-badge { background-color: rgba(148, 163, 184, 0.12); color: var(--text-secondary); }
-        .badge-element.assigned-badge { background-color: rgba(59, 130, 246, 0.12); color: var(--accent-color); }
-        .badge-element.truck-available { background-color: rgba(16, 185, 129, 0.12); color: var(--accent-success); }
-        .badge-element.truck-busy { background-color: rgba(245, 158, 11, 0.12); color: var(--accent-warning); }
-        .timestamp-stamp-text { font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 0.85rem; }
+        .kpi-card { background: rgba(21, 31, 50, 0.4); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; min-height: 100px; position: relative; }
+        [data-theme="light"] .kpi-card { background: #f8fafc; }
+        .kpi-card h4 { font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 4px; text-transform: uppercase; }
+        .kpi-v { font-size: 1.6rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+        .kpi-subtext { font-size: 0.75rem; color: var(--accent-warning); margin-top: 4px; font-weight: 600; }
+        .kpi-done-badge { font-size: 0.75rem; color: var(--accent-success); margin-top: 2px; font-weight: 600; }
 
-        /* VISUAL STAGING DOCK LAYOUT SECTION */
-        .dock-bays-staging-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .dock-bay-card { border: 1px solid var(--border-color); background: rgba(0,0,0,0.08); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 12px; border-top: 4px solid var(--disabled-color); }
-        [data-theme="light"] .dock-bay-card { background: rgba(0,0,0,0.02); }
-        .dock-bay-card.occupied-state { border-top-color: var(--accent-warning); }
-        .dock-card-top-header { display: flex; justify-content: space-between; align-items: center; }
-        .dock-card-top-header h3 { font-size: 1rem; font-weight: 600; }
-        .dock-occupancy-dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--disabled-color); }
-        .dock-bay-card.occupied-state .dock-occupancy-dot { background-color: var(--accent-warning); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-        .dock-assignment-context { font-size: 0.8rem; color: var(--text-secondary); min-height: 32px; display: flex; flex-direction: column; justify-content: center; }
-        
-        /* FLEET ASSETS & USER CONSOLE FLEX-SPLIT BLOCK */
-        .management-flex-split-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; }
-        @media(max-width: 1024px) { .management-flex-split-row { grid-template-columns: 1fr; } }
+        .reconciliation-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; border: 1px solid var(--border-color); text-align: center; }
+        .reconciliation-table th { background: rgba(15, 23, 42, 0.8); color: var(--text-secondary); padding: 12px; font-weight: 600; border: 1px solid var(--border-color); }
+        .reconciliation-table td { padding: 12px; border: 1px solid var(--border-color); font-weight: bold; background: rgba(21, 31, 50, 0.2); color: var(--text-main); }
+        .metric-label-col { text-align: left !important; background: rgba(15, 23, 42, 0.9) !important; color: #ffffff !important; font-weight: 600 !important; width: 180px; }
 
-        /* ADMINISTRATIVE PERMISSION ACCESS GUARD MASKS */
-        .admin-action-restricted-view, .admin-column-cell { display: none !important; }
-        body.admin-authenticated .admin-action-restricted-view { display: flex !important; }
-        body.admin-authenticated .admin-column-cell { display: table-cell !important; }
-        body.admin-authenticated th.admin-column-cell { display: table-cell !important; }
+        .split-flex-container { display: flex; gap: 20px; align-items: stretch; flex-wrap: wrap; }
+        .bay-grid-left { flex: 3; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; min-width: 300px; }
+        .fleet-summary-right { flex: 1; background: rgba(21, 31, 50, 0.4); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; min-width: 250px; }
 
-        /* OVERLAY MODAL BASE DIALOGS */
-        .system-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(2, 6, 23, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 1; transition: opacity 0.2s ease; }
-        .system-modal-overlay.hidden-state { opacity: 0; pointer-events: none; display: none !important; }
-        .dialog-card-frame { background-color: var(--bg-card); border: 1px solid var(--border-color); width: 100%; max-width: 440px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; }
-        .dialog-card-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .dialog-card-header h3 { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .btn-modal-close { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.1rem; }
-        .dialog-card-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-        
-        .form-input-element-row { display: flex; flex-direction: column; gap: 6px; }
-        .form-input-element-row label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-input-element-row input, .form-input-element-row select { width: 100%; padding: 10px 14px; background-color: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
-        [data-theme="light"] .form-input-element-row input, [data-theme="light"] .form-input-element-row select { background-color: rgba(0,0,0,0.03); }
-        .form-input-element-row input:focus, .form-input-element-row select:focus { border-color: var(--accent-color); }
-        
-        .dialog-footer-actions { padding: 16px 24px; background-color: rgba(0,0,0,0.1); border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; }
-        [data-theme="light"] .dialog-footer-actions { background-color: rgba(0,0,0,0.01); }
-        .btn-action-ui { padding: 10px 18px; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: background 0.2s; }
-        .btn-action-ui.btn-cancel { background: transparent; border-color: var(--border-color); color: var(--text-main); }
-        .btn-action-ui.btn-cancel:hover { background: rgba(255,255,255,0.03); }
-        .btn-action-ui.btn-confirm { background-color: var(--accent-color); color: #fff; }
-        .btn-action-ui.btn-confirm:hover { background-color: #2563eb; }
+        .bay-box { background: rgba(21, 31, 50, 0.3); border: 2px solid var(--border-color); border-radius: 8px; padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.2s; }
+        .bay-box.occupied { border-color: var(--accent-color); background: rgba(59, 130, 246, 0.05); }
+        .bay-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; margin-bottom: 8px; }
+        .bay-name { font-weight: bold; color: var(--text-main); font-size: 1.05rem; }
+        .bay-status { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; color: white; }
 
-        .conflict-alert-banner { display: flex; gap: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--accent-danger); color: #f87171; padding: 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; align-items: flex-start; }
-        .conflict-alert-banner i { font-size: 1.1rem; margin-top: 2px; }
+        .summary-pill { background: rgba(15, 23, 42, 0.4); padding: 14px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .summary-count { font-size: 1.15rem; font-weight: bold; color: var(--accent-warning); }
+
+        .manual-entry-box { border-radius: 8px; padding: 20px; margin-bottom: 20px; background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border-color); }
+        .manual-entry-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: flex-end; }
         
-        /* GENERAL STYLES */
-        .btn-circle-action { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
-        .btn-circle-action:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .btn-circle-action.btn-delete-row:hover { background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); }
+        input, select, textarea { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; width: 100%; outline: none; transition: border-color 0.2s; }
+        input:focus, select:focus { border-color: var(--accent-color); }
+        input:disabled, select:disabled, textarea:disabled { background: var(--bg-main); opacity: 0.6; color: var(--disabled-color); cursor: not-allowed; }
+
+        .btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-export, .btn-warning { padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; transition: background 0.2s; white-space: nowrap; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-secondary { background: transparent; border-color: var(--border-color); color: var(--text-main); }
+        .btn-success { background: var(--accent-success); color: white; }
+        .btn-danger { background: var(--accent-danger); color: white; }
+        .btn-warning { background: var(--accent-warning); color: black; }
+        .btn-export { background: #4f46e5; color: white; }
+        .btn-primary:disabled, .btn-secondary:disabled, .btn-success:disabled, .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+        .table-wrapper { overflow-x: auto; margin-top: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+        th { background: rgba(21, 31, 50, 0.6); padding: 14px; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        [data-theme="light"] th { background: #e2e8f0; }
+        td { padding: 14px; border-bottom: 1px solid var(--border-color); color: var(--text-main); vertical-align: middle; white-space: nowrap; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
+        
+        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-color); vertical-align: middle; }
+        
+        .tab-toggle { background: transparent; border: none; color: var(--text-secondary); padding: 6px 14px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
+        .tab-toggle.active { background: var(--accent-color); color: white; }
+        
+        .role-indicator-badge { font-size: 0.75rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; text-align: center; margin-top: 4px; display: inline-block; width: 100%; }
+        .badge-admin { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-staff { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+        /* MODAL STYLES */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:2000; }
+        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; }
+        .modal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
     </style>
 </head>
-<body class="admin-authenticated"> <aside id="mainTerminalSidebar">
-        <div class="sidebar-header">
-            <div class="logo-area">
-                <i class="fa-solid fa-layer-group"></i>
-                <span>LogiTrack OS</span>
-            </div>
-            <button class="toggle-sidebar-btn" onclick="toggleSidebarInterfaceState()" title="Collapse Panel">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-        </div>
-        
-        <ul class="sidebar-menu">
-            <li class="active"><a href="#dashboard"><i class="fa-solid fa-chart-pie"></i> <span>Dashboard Hub</span></a></li>
-            <li><a href="#planning-matrix"><i class="fa-solid fa-table-list"></i> <span>Planning Matrix</span></a></li>
-            <li><a href="#dock-stager"><i class="fa-solid fa-warehouse"></i> <span>Staging Bays</span></a></li>
-            <li><a href="#fleet-pool"><i class="fa-solid fa-truck-moving"></i> <span>Fleet Pool Asset</span></a></li>
-            <li class="admin-action-restricted-view"><a href="#security-console"><i class="fa-solid fa-shield-halved"></i> <span>Admin Controls</span></a></li>
-        </ul>
+<body>
 
-        <div class="sidebar-footer">
-            <button class="btn-auth-trigger" onclick="toggleAuthenticationFlowState()" id="systemAuthTriggerButton">
-                <i class="fa-solid fa-right-from-bracket"></i> <span id="authActionTextLabel">Disconnect Session</span>
+    <!-- AUTHENTICATION CHECKPOINT CONTAINER OVERLAY -->
+    <div id="application-login-checkpoint-overlay" class="modal-overlay">
+        <div class="modal-card" style="max-width: 380px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);">
+            <div style="text-align: center; margin-bottom: 8px;">
+                <i class="fa-solid fa-layer-group" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 12px;"></i>
+                <h2 style="font-size: 1.4rem; font-weight: 800;">Terminal Core Login</h2>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Access secure logistics dispatch pipelines</p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                    <label style="font-size: 0.75rem; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase;">Profile Account Role</label>
+                    <select id="login-form-selected-identity-node">
+                        <option value="ADMIN">ADMIN (Root Dashboard)</option>
+                        <option value="PGI">PGI Operations</option>
+                        <option value="AR">AR Accounting</option>
+                        <option value="TRANSPORT">TRANSPORT Logistics</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 4px; text-transform: uppercase;">Access Security Token</label>
+                    <input type="password" id="login-form-token-field" placeholder="••••••••" style="letter-spacing: 0.1em;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
+                    <input type="checkbox" id="login-form-remember-me-checkbox" style="width: 16px; height: 16px; margin: 0;">
+                    <label for="login-form-remember-me-checkbox" style="font-size: 0.85rem; color: var(--text-secondary); user-select: none; cursor: pointer;">Remember profile session context</label>
+                </div>
+                <button type="button" class="btn-primary" style="width: 100%; padding: 12px; margin-top: 4px;" onclick="authenticateSystemLoginSession()"><i class="fa-solid fa-right-to-bracket"></i> Initialize Session</button>
+            </div>
+        </div>
+    </div>
+
+    <aside id="main-sidebar">
+        <button class="sidebar-toggle-btn" onclick="toggleSidebarLayout()" title="Minimize/Maximize Menu">
+            <i id="sidebar-chevron" class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div>
+            <div class="brand">
+                <i class="fa-solid fa-layer-group"></i> 
+                <span class="brand-text">LogiTrack Terminal</span>
+            </div>
+
+            <ul class="nav-links">
+                <li><a id="nav-dash" class="nav-item active"><i class="fa-solid fa-chart-line"></i> <span>Operations Dashboard</span></a></li>
+                <li><a id="nav-plan" class="nav-item"><i class="fa-solid fa-table-list"></i> <span>Master Planning Matrix</span></a></li>
+                <li><a id="nav-truck" class="nav-item"><i class="fa-solid fa-truck-moving"></i> <span>Truck Availability</span></a></li>
+                <li><a id="nav-bays" class="nav-item"><i class="fa-solid fa-warehouse"></i> <span>Bay Map Staging</span></a></li>
+                <li><a id="nav-security" class="nav-item"><i class="fa-solid fa-key"></i> <span>Account Settings</span></a></li>
+                <li><a id="nav-users" class="nav-item"><i class="fa-solid fa-users-gear"></i> <span>User Matrix Admin</span></a></li>
+            </ul>
+        </div>
+        <div class="brand-text" style="font-size: 0.75rem; color: var(--text-secondary); text-align: center; padding-top: 12px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+            <div>Terminal Clock: <span id="live-system-clock">2026-06-08</span></div>
+            <button class="btn-secondary" style="padding: 4px; font-size: 0.75rem;" onclick="toggleThemeMode()">
+                <i class="fa-solid fa-circle-half-stroke"></i> Switch Theme
             </button>
+            <button class="btn-danger" style="padding: 6px; font-size: 0.75rem; margin-top: 4px;" onclick="invalidateUserTerminalLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </div>
     </aside>
 
     <main>
-        <header class="top-navbar">
-            <div class="view-title-group">
-                <h1 id="headerContextProfileTitle">Terminal Operation Matrix</h1>
-                <p>Real-time synchronization engine & reconciliation tracking platform</p>
-            </div>
-            <div class="navbar-controls">
-                <div class="theme-control-switch">
-                    <span><i class="fa-solid fa-sun"></i></span>
-                    <label class="switch-track" for="themeSystemToggleCheckbox">
-                        <input type="checkbox" id="themeSystemToggleCheckbox" onchange="executeSystemThemeTransition(this)">
-                        <span class="switch-thumb"></span>
-                    </label>
-                    <span><i class="fa-solid fa-moon"></i></span>
-                </div>
-                <button class="btn-config-trigger" onclick="displayProfileConfigurationEngineModal()">
-                    <i class="fa-solid fa-sliders"></i> <span>Sys Config</span>
-                </button>
-            </div>
-        </header>
-
-        <section class="metrics-summary-grid">
-            <div class="summary-card">
-                <div class="summary-info">
-                    <h3>Pending Matrix Lines</h3>
-                    <div class="value-display" id="cardPendingMetricDisplay">--</div>
-                    <div class="subtext-metric">Awaiting validation checkpoint</div>
-                </div>
-                <div class="summary-icon-wrapper" style="background: rgba(148, 163, 184, 0.1); color: var(--text-secondary);">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-info">
-                    <h3>Completed Load Lifecycles</h3>
-                    <div class="value-display" id="cardCompletedMetricDisplay">--</div>
-                    <div class="subtext-metric">Dispatched asset loops done</div>
-                </div>
-                <div class="summary-icon-wrapper" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-success);">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-info">
-                    <h3>Yard Available Units</h3>
-                    <div class="value-display" id="cardAvailableTrucksMetricDisplay">--</div>
-                    <div class="subtext-metric">Active unassigned transport options</div>
-                </div>
-                <div class="summary-icon-wrapper" style="background: rgba(245, 158, 11, 0.1); color: var(--accent-warning);">
-                    <i class="fa-solid fa-truck-ramp-box"></i>
-                </div>
-            </div>
-        </section>
-
-        <section class="reconciliation-analytics-block">
-            <div class="workspace-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-chart-line"></i> Planning Lifecycles Analytics Core Chart</h2>
-                </div>
-                <div class="chart-viewport-wrapper">
-                    <canvas id="analyticalTimelineReconciliationChart"></canvas>
-                </div>
-                <div class="matrix-legend-grid" id="chartSummaryMetricsLegendGrid">
-                    </div>
-            </div>
-
-            <div class="workspace-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-circle-nodes"></i> Operational Staging Summary</h2>
-                </div>
-                <div style="padding: 20px; display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center;">
-                    <div style="text-align: center; font-size: 0.85rem; color: var(--text-secondary);">
-                        <p>Total Dispatch Records: <strong id="quickMetricTotalRowsText" style="color: var(--text-main);">0</strong></p>
-                        <div style="margin-top: 15px; display: flex; justify-content: space-around;">
-                            <div>
-                                <span style="display:inline-block; width:10px; height:10px; background:#94a3b8; border-radius:50%; margin-right:5px;"></span>
-                                Pending: <span id="quickMetricPendingText">0</span>
-                            </div>
-                            <div>
-                                <span style="display:inline-block; width:10px; height:10px; background:#a855f7; border-radius:50%; margin-right:5px;"></span>
-                                Loaded: <span id="quickMetricLoadedText">0</span>
-                            </div>
+        <div id="panel-dashboard" class="view-container">
+            <div class="view-panel" style="padding: 16px; margin-bottom: 20px; background: rgba(21, 31, 50, 0.4);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fa-solid fa-calendar-check" style="font-size: 1.5rem; color: var(--accent-color);"></i>
+                        <div>
+                            <h2 style="font-size: 1.25rem; font-weight: 700;">Operational Monitoring Terminal</h2>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary);">Central real-time RDD scope data filtering visualization parameters.</p>
                         </div>
                     </div>
+                    <div style="display: flex; align-items: center; gap: 10px; background: rgba(15, 23, 42, 0.6); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <label for="central-target-date-picker" style="font-size: 0.8rem; font-weight: bold; color: var(--text-secondary); white-space: nowrap; text-transform: uppercase;">Dashboard RDD:</label>
+                        <input type="date" id="central-target-date-picker" value="2026-06-08" style="padding: 6px 10px; width: 160px; font-weight: bold;" onchange="propagateGlobalSystemDate(this.value)">
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <section class="workspace-panel" id="planningMatrixAnchorSection">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-table-cells-large"></i> Live Planning & Dispatch Routing Log Matrix</h2>
-            </div>
-            <div class="table-viewport-container">
-                <table class="terminal-table" id="interactivePlanningTable">
-                    <thead>
-                        <tr>
-                            <th>Order Routing Reference ID</th>
-                            <th>Destination Node Target</th>
-                            <th>Requested Delivery Date (RDD)</th>
-                            <th>Lifecycle Point Tracking Framework State</th>
-                            <th>Linked Fleet Asset ID</th>
-                            <th>Checkpoint Absolute Timestamp</th>
-                            <th class="admin-column-cell">Admin Controls</th>
-                        </tr>
-                    </thead>
-                    <tbody id="interactivePlanningTableBody">
-                        </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="workspace-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-dolly"></i> Dock Bays Visual Assignment Staging Grid Layout</h2>
-            </div>
-            <div class="dock-bays-staging-grid" id="dockBaysStagingWrapperGrid">
+            <div class="kpi-row">
+                <div class="kpi-grid-left">
+                    <div class="kpi-sub-grid">
+                        <div class="kpi-card"><h4>PICKED</h4><p class="kpi-v" id="dash-lbl-picked">Done: 0</p><p class="kpi-subtext" id="sub-lbl-picked">Pending: 0</p></div>
+                        <div class="kpi-card"><h4>PGI</h4><p class="kpi-v" id="dash-lbl-pgi">Done: 0</p><p class="kpi-subtext" id="sub-lbl-pgi">Pending: 0</p></div>
+                        <div class="kpi-card"><h4>INVOICED</h4><p class="kpi-v" id="dash-lbl-invoiced">Done: 0</p><p class="kpi-subtext" id="sub-lbl-invoiced">Pending: 0</p></div>
+                    </div>
+                    <div class="kpi-sub-grid">
+                        <div class="kpi-card"><h4>DS PRINTING</h4><p class="kpi-v" id="dash-lbl-ds">Done: 0</p><p class="kpi-subtext" id="sub-lbl-ds">Pending: 0</p></div>
+                        <div class="kpi-card"><h4>CHECKED</h4><p class="kpi-v" id="dash-lbl-checked">Done: 0</p><p class="kpi-subtext" id="sub-lbl-checked">Pending: 0</p></div>
+                        <div class="kpi-card" style="border-left: 4px solid var(--accent-success);"><h4>LOADED</h4><p class="kpi-v" id="dash-lbl-loaded">Done: 0</p><p class="kpi-subtext" id="sub-lbl-loaded" style="color:var(--accent-success);">Pending: 0</p></div>
+                    </div>
                 </div>
-        </section>
-
-        <section class="management-flex-split-row">
-            <div class="workspace-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-truck"></i> Live Active Enterprise Fleet Asset Pool</h2>
+                <div class="kpi-card" style="flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-sidebar) 100%); border: 1px solid rgba(59, 130, 246, 0.2); min-width: 220px;">
+                    <h4 style="margin-bottom: 6px; font-weight: 700; color: var(--text-main); letter-spacing: 0.05em;">TOTAL TARGET DISPATCHES</h4>
+                    <p style="font-size: 3.8rem; font-weight: 800; color: var(--text-main); line-height: 1;" id="dash-lbl-target">0</p>
                 </div>
-                <div class="table-viewport-container">
-                    <table class="terminal-table">
+            </div>
+
+            <div class="view-panel" style="margin-bottom: 24px; padding: 20px;">
+                <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-calculator" style="color: var(--accent-warning);"></i> Running Fleet & Order Balancing Aggregates
+                </h3>
+                <div style="overflow-x: auto;">
+                    <table class="reconciliation-table">
                         <thead>
                             <tr>
-                                <th>Vehicle Plate Fleet ID</th>
-                                <th>Asset Logistics Class Category</th>
-                                <th>Operational Availability State Status</th>
+                                <th>METRIC TYPE</th>
+                                <th>AUV</th>
+                                <th>4WH</th>
+                                <th>6WH</th>
+                                <th>10WH</th>
+                                <th>20FT/40FT</th>
                             </tr>
                         </thead>
-                        <tbody id="fleetPoolAssetTrackerTableBody">
-                            </tbody>
+                        <tbody id="reconciliation-matrix-tbody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="workspace-panel">
-                <div class="panel-header">
-                    <h2><i class="fa-solid fa-user-gear"></i> System User Simulation Identities Console</h2>
+            <div class="view-panel" style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                    <h3 style="margin: 0; font-size: 1rem; color: var(--text-main);"><i class="fa-solid fa-chart-column"></i> Dispatch Milestone Timeline Tracking</h3>
+                    <div style="display: flex; background: rgba(15, 23, 42, 0.6); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <button id="btn-shift-day" class="tab-toggle active" onclick="switchTimelineShift('day')">Day Shift (5 AM - 5 PM)</button>
+                        <button id="btn-shift-night" class="tab-toggle" onclick="switchTimelineShift('night')">Night Shift (5 PM - 4 AM)</button>
+                    </div>
                 </div>
-                <div class="table-viewport-container">
-                    <table class="terminal-table">
+                <div style="position: relative; height: 340px; width: 100%;">
+                    <canvas id="milestoneTimelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-planning" class="view-container hidden">
+            <div class="view-panel">
+                <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <h1 style="font-size: 1.4rem; font-weight: 700;">Master Planning Matrix Table</h1>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">Active Target Date Window: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-08</span></p>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-export" onclick="exportAuditTrailMatrixToCSV()">
+                            <i class="fa-solid fa-file-csv"></i> Export Manifest & Timestamps
+                        </button>
+                        <button id="trigger-excel-drawer-btn" class="btn-secondary" style="color: var(--accent-color); border-color: rgba(59, 130, 246, 0.4);" onclick="toggleControlDrawers('excel')">
+                            <i class="fa-solid fa-file-import"></i> Paste from Excel Spreadsheet
+                        </button>
+                        <button id="trigger-manual-drawer-btn" class="btn-secondary" style="color: var(--accent-success); border-color: rgba(16, 185, 129, 0.4);" onclick="toggleControlDrawers('manual')">
+                            <i class="fa-solid fa-square-plus"></i> Open Manual Dispatch Form
+                        </button>
+                    </div>
+                </header>
+
+                <div id="excel-importer-drawer" class="manual-entry-box hidden" style="border: 2px dashed var(--accent-color); background: rgba(59, 130, 246, 0.01);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size:0.9rem; color:var(--accent-color); font-weight:bold;"><i class="fa-solid fa-paste"></i> Clipboard Paste Engine Layout</h3>
+                        <button class="btn-secondary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="document.getElementById('excel-importer-drawer').classList.add('hidden')">✕ Close</button>
+                    </div>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px;">Paste clipboard columns structured as follows:<br>
+                    <code style="background:rgba(15, 23, 42, 0.6); padding:4px 8px; border-radius:4px; display:inline-block; margin-top:4px; color:var(--text-main); font-weight:bold;">TRUCK TYPE [Tab] DISPATCH [Tab] REQ. DELIVERY DATE [Tab] CUSTOMER [Tab] ROUTE</code></p>
+                    <textarea id="excel-paste-input-area" rows="5" style="margin-bottom:12px; font-family: monospace; font-size:0.8rem;" placeholder="Paste row content directly from spreadsheet application..."></textarea>
+                    <button id="btn-execute-excel-parse" class="btn-primary" onclick="processExcelClipboardData()"><i class="fa-solid fa-gears"></i> Process Ingestion Matrix</button>
+                </div>
+
+                <div id="manual-entry-drawer" class="manual-entry-box hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size:0.9rem; color:var(--accent-success); font-weight:bold;"><i class="fa-solid fa-plus"></i> Manual Manifest Delivery Configuration</h3>
+                        <button class="btn-secondary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="document.getElementById('manual-entry-drawer').classList.add('hidden')">✕ Close</button>
+                    </div>
+                    <form id="manual-delivery-form-element" class="manual-entry-form" onsubmit="handleManualManifestSubmission(event)">
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Dispatch ID</label><input type="text" id="field-m-dispatch" required placeholder="e.g., 10129030"></div>
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Target Delivery Date</label><input type="date" id="field-m-rdd" required></div>
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Customer Account</label><input type="text" id="field-m-customer" required placeholder="e.g., PG"></div>
+                        <div><label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Route Destination</label><input type="text" id="field-m-route" required placeholder="e.g., CALOOCAN"></div>
+                        <div>
+                            <label style="font-size:0.75rem; margin-bottom:4px; display:block; color:var(--text-secondary);">Truck Classification</label>
+                            <select id="field-m-type"><option value="AUV">AUV</option><option value="4WH">4WH</option><option value="6WH">6WH</option><option value="10WH">10WH</option><option value="20FT/40FT">20FT/40FT</option></select>
+                        </div>
+                        <button type="submit" class="btn-success">Save Record</button>
+                    </form>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.05); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+                    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-secondary);"></i>
+                    <input type="text" id="planning-text-search-filter" placeholder="Filter parameters by Delivery ID, Account profile matches, or Destined Location routes..." style="background: transparent; border: none; padding: 4px;" oninput="renderPlanningTableMatrixView()">
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
                         <thead>
                             <tr>
-                                <th>Authorized Profile Identifier</th>
-                                <th>Role Level Authorization Context</th>
-                                <th>Runtime Matrix Active Command Actions</th>
+                                <th>Delivery ID (DISPATCH)</th>
+                                <th>Date (RDD)</th>
+                                <th>Customer</th>
+                                <th>Route Description</th>
+                                <th>Truck Type</th>
+                                <th>Bay Staging</th>
+                                <th>Assigned Fleet Unit</th>
+                                <th style="text-align:center;">Picked</th>
+                                <th style="text-align:center;">PGI</th>
+                                <th style="text-align:center;">Invoiced</th>
+                                <th style="text-align:center;">DS Print</th>
+                                <th style="text-align:center;">Checked</th>
+                                <th style="text-align:center;">Loaded</th>
+                                <th style="text-align:right;" id="th-planning-admin-actions">Administrative Control</th>
                             </tr>
                         </thead>
-                        <tbody id="systemUserRosterMatrixTableBody">
-                            </tbody>
+                        <tbody id="planning-matrix-table-tbody"></tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <div id="panel-trucks" class="view-container hidden">
+            <div class="view-panel">
+                <header style="margin-bottom: 20px;">
+                    <h1 style="font-size: 1.4rem; font-weight: 700;">Transport Fleet Asset Pool Tracking</h1>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Target Filter View Date Frame: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-08</span></p>
+                </header>
+
+                <div class="manual-entry-box" id="truck-registration-input-container">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 14px; color: var(--accent-warning); font-weight:bold;"><i class="fa-solid fa-truck-ramp-box"></i> Register Daily Operational Vehicle Asset Instance</h3>
+                    <form id="fleet-asset-registry-form-element" class="manual-entry-form" onsubmit="handleTruckAssetRegistration(event)">
+                        <div>
+                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Truck Classification Type</label>
+                            <select id="field-t-type"><option value="AUV">AUV</option><option value="4WH">4WH</option><option value="6WH">6WH</option><option value="10WH">10WH</option><option value="20FT/40FT">20FT/40FT</option></select>
+                        </div>
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Truck Code Identity</label><input type="text" id="field-t-code" placeholder="e.g., AUV-1" required></div>
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Registered Plate Number</label><input type="text" id="field-t-plate" placeholder="e.g., NHN-675" required></div>
+                        <button type="submit" id="btn-save-truck-asset" class="btn-warning"><i class="fa-solid fa-floppy-disk"></i> Register Asset Instance</button>
+                    </form>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Truck Model Classification</th>
+                                <th>Truck Code ID</th>
+                                <th>Registered Plate Layout</th>
+                                <th>Availability Yard Status</th>
+                                <th>Timestamp Entry</th>
+                                <th>Shift Date</th>
+                                <th style="text-align: right;" id="th-truck-actions">Administrative Control</th>
+                            </tr>
+                        </thead>
+                        <tbody id="truck-fleet-pool-table-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-bays" class="view-container hidden">
+            <div class="view-panel">
+                <header style="margin-bottom: 24px;">
+                    <h1 style="font-size: 1.4rem; font-weight: 700;">Loading Dock Bay Matrix Staging Map</h1>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Real-Time operational bay distribution layout: <span class="active-date-display-badge" style="color:var(--accent-color); font-weight:bold;">2026-06-08</span></p>
+                </header>
+                <div class="split-flex-container">
+                    <div class="bay-grid-left" id="bay-matrix-visual-layout-grid-box"></div>
+                    <div class="fleet-summary-right" id="bay-view-yard-fleet-summary-right-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="panel-security" class="view-container hidden">
+            <div class="view-panel" style="max-width: 500px;">
+                <h1 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;">Modify Security Profile Profile Password</h1>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">Update credentials matching your active terminal authentication record session profile.</p>
+                
+                <form id="change-password-system-form" onsubmit="handleActiveUserPasswordModification(event)" style="display:flex; flex-direction:column; gap:16px;">
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: bold; margin-bottom: 6px; display: block;">Active Profile Account Target</label>
+                        <input type="text" id="field-pass-user" readonly style="opacity:0.7;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.8rem; font-weight: bold; margin-bottom: 6px; display: block;">Enter New Password Pattern</label>
+                        <input type="password" id="field-pass-new" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-primary" style="align-self: flex-start;"><i class="fa-solid fa-shield-halved"></i> Update Profile Credentials</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="panel-users" class="view-container hidden">
+            <div class="view-panel">
+                <header style="margin-bottom: 20px;">
+                    <h1 style="font-size: 1.4rem; font-weight: 700;">System User Management Profile Administration Matrix</h1>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Manage terminal access profiles and internal tracking engine configuration settings.</p>
+                </header>
+
+                <div class="manual-entry-box" id="user-creation-drawer-container">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 14px; color: var(--accent-color); font-weight:bold;"><i class="fa-solid fa-user-plus"></i> Provision Platform Access Profile</h3>
+                    <form id="user-credential-provision-form-element" class="manual-entry-form" onsubmit="handleUserAccessAccountGeneration(event)">
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">USER ID / NAME</label><input type="text" id="field-u-username" placeholder="e.g., ACCOUNT_HANDLE" required></div>
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">DEFAULT SEED PASSWORD</label><input type="text" id="field-u-password" placeholder="Seed sequence" required></div>
+                        <div>
+                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">ACCESS PRIVILEGES</label>
+                            <select id="field-u-type"><option value="ADMIN">ADMIN</option><option value="STAFF">STAFF</option></select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">FUNCTIONAL DEPARTMENT ASSIGNMENT</label>
+                            <select id="field-u-role"><option value="Admin">Admin</option><option value="PGI">PGI</option><option value="AR">AR</option><option value="Transport">Transport</option></select>
+                        </div>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-user-shield"></i> Provision Credentials</button>
+                    </form>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>System Username Reference</th>
+                                <th>Stored Access Secret Key Sequences</th>
+                                <th>Authorization Classification</th>
+                                <th>Functional Operational Department</th>
+                                <th style="text-align: right;">Administrative Access Revocation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-accounts-matrix-table-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <div class="system-modal-overlay hidden-state" id="authenticationGatewayPortalModal">
-        <div class="dialog-card-frame">
-            <div class="dialog-card-header">
-                <h3><i class="fa-solid fa-shield-halved"></i> Security Portal Access Credentials Validation</h3>
-                <button class="btn-modal-close" onclick="closePortalAuthenticationDialogModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form onsubmit="executePortalUserContextAuthentication(event)">
-                <div class="dialog-card-body">
-                    <div class="form-input-element-row">
-                        <label for="authFormSelectUserDropdown">Select Sim Profile User Target</label>
-                        <select id="authFormSelectUserDropdown" required>
-                            </select>
-                    </div>
-                    <div class="form-input-element-row">
-                        <label for="authFormInputFieldSecret">Profile Credentials Passphrase</label>
-                        <input type="password" id="authFormInputFieldSecret" required placeholder="••••••••">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px;">
-                        <input type="checkbox" id="authRememberDeviceCheckbox" style="width: 16px; height: 16px; accent-color: var(--accent-color); cursor: pointer;">
-                        <label for="authRememberDeviceCheckbox" style="font-size: 0.85rem; color: var(--text-secondary); cursor: pointer; user-select: none;">Remember this device configuration for 30 days</label>
-                    </div>
-                </div>
-                <div class="dialog-footer-actions">
-                    <button type="button" class="btn-action-ui btn-cancel" onclick="closePortalAuthenticationDialogModal()">Cancel Connection</button>
-                    <button type="submit" class="btn-action-ui btn-confirm">Establish Checked Connection Token</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="system-modal-overlay hidden-state" id="manualTruckSelectionModalOverlay">
-        <div class="dialog-card-frame">
-            <div class="dialog-card-header">
-                <h3><i class="fa-solid fa-truck-pickup"></i> Manual Fleet Asset Binding Assignment</h3>
-                <button class="btn-modal-close" onclick="abortManualTruckAssignmentFlow()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="dialog-card-body">
-                <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">
-                    Dispatch order line target <strong id="manualTruckTargetDispatchDisplay" style="color: var(--text-main);">#0000</strong> has transitioned to <span style="color:#a855f7; font-weight:700;">LOADED</span> status. Please select a verified available unit asset below to map to this route.
-                </p>
-                <div class="form-input-element-row">
-                    <label for="manualTruckSelectionDropdown">Available Transport Fleet Units Pool</label>
-                    <select id="manualTruckSelectionDropdown">
-                        </select>
-                </div>
-            </div>
-            <div class="dialog-footer-actions">
-                <button type="button" class="btn-action-ui btn-cancel" onclick="abortManualTruckAssignmentFlow()">Cancel Action</button>
-                <button type="button" class="btn-action-ui btn-confirm" onclick="confirmManualTruckAssignmentLink()">Bind & Confirm Asset</button>
+    <div id="bay-assignment-modal-element" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3 style="font-size:1.1rem; font-weight:700;"><i class="fa-solid fa-warehouse" style="color:var(--accent-color);"></i> Assign Docking Bay Segment</h3>
+            <p style="font-size:0.8rem; color:var(--text-secondary);">Choose a staging bay area context mapping configuration matrix parameters for Dispatch Delivery: <strong id="modal-target-dispatch-lbl" style="color:var(--text-main);"></strong></p>
+            <div class="modal-grid" id="modal-bay-buttons-layout-container"></div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+                <button class="btn-secondary" onclick="closeInteractiveBayAssignmentModal()">Cancel Assignation</button>
+                <button class="btn-danger" id="modal-unassign-btn-element">Clear Bay Assignment</button>
             </div>
         </div>
     </div>
 
-    <div class="system-modal-overlay hidden-state" id="stagingConflictAlertOverlayModal">
-        <div class="dialog-card-frame">
-            <div class="dialog-card-header">
-                <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-danger);"></i> Staging Allocation Conflict Detected</h3>
-                <button class="btn-modal-close" onclick="closeStagingConflictDialogModal()"><i class="fa-solid fa-xmark"></i></button>
+    <!-- CUSTOM INTERACTIVE MODAL SELECTION TO ASSIGN TRUCKS ON LOADED EVENTS -->
+    <div id="truck-assignment-modal-element" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3 style="font-size:1.1rem; font-weight:700;"><i class="fa-solid fa-truck-moving" style="color:var(--accent-warning);"></i> Manual Fleet Truck Assignment</h3>
+            <p style="font-size:0.8rem; color:var(--text-secondary);">Select an available truck instance from the asset pool to align with dispatch: <strong id="modal-target-truck-dispatch-lbl" style="color:var(--text-main);"></strong></p>
+            <div style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-top: 8px;" id="modal-truck-buttons-layout-container"></div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                <button class="btn-secondary" onclick="closeInteractiveTruckAssignmentModal()">Cancel Loading Stage</button>
             </div>
-            <div class="dialog-card-body">
-                <div class="conflict-alert-banner">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-                    <div>
-                        <strong>Allocation Warning Block Exception:</strong> Staging Bay <span id="modalAlertTargetBayIdentifierString" style="font-weight: bold; text-decoration: underline;">--</span> is actively occupied or linked to another route asset deployment node lifecycle.
-                    </div>
-                </div>
-                <div class="form-input-element-row">
-                    <label>Active Conflicting Path Entity Link Context</label>
-                    <input type="text" id="modalAlertActiveConflictingContextValueField" readonly value="--">
-                </div>
-                <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">
-                    Enabling this allocation path override maps routing reference identifier <strong id="modalAlertOverrideRequestingRouteString" style="color: var(--text-main);">#0000</strong> directly to this bay. Do you wish to override the terminal structural pipeline rules?
-                </p>
-            </div>
-            <div class="dialog-footer-actions">
-                <button type="button" class="btn-action-ui btn-cancel" onclick="closeStagingConflictDialogModal()">Deny Allocation</button>
-                <button type="button" class="btn-action-ui btn-confirm" style="background-color: var(--accent-warning);" onclick="confirmStagingBayAllocationOverrideChain()">Force Operational Override Link</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="system-modal-overlay hidden-state" id="systemProfileConfigurationModalDialog">
-        <div class="dialog-card-frame">
-            <div class="dialog-card-header">
-                <h3><i class="fa-solid fa-gears"></i> Profiles Passphrase Calibration Engine</h3>
-                <button class="btn-modal-close" onclick="closeProfileConfigurationEngineModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form onsubmit="executeProfileSecurityCredentialsUpdate(event)">
-                <div class="dialog-card-body">
-                    <div class="form-input-element-row">
-                        <label for="configFormActiveTargetProfileField">Target Simulation Account Profile Scope</label>
-                        <input type="text" id="configFormActiveTargetProfileField" readonly value="--">
-                    </div>
-                    <div class="form-input-element-row">
-                        <label for="configFormInputFieldNewPassphrase">New Authentication Passphrase Vector</label>
-                        <input type="password" id="configFormInputFieldNewPassphrase" required placeholder="Type new access control characters...">
-                    </div>
-                </div>
-                <div class="dialog-footer-actions">
-                    <button type="button" class="btn-action-ui btn-cancel" onclick="closeProfileConfigurationEngineModal()">Dismiss Configuration</button>
-                    <button type="submit" class="btn-action-ui btn-confirm">Re-calibrate Access Keys</button>
-                </div>
-            </form>
         </div>
     </div>
 
     <script>
-        // LIVE SIMULATION STATE DATA CONVERSIONS POOLS
-        let uniquePlanningMatrixArray = [
-            { orderId: "DISP-1092", destination: "Chicago Hub Terminal Terminal Alpha", rdd: "2026-06-10", checked: true, loaded: false, assignedTruckId: null, timestamp: "01:14:22 AM" },
-            { orderId: "DISP-4821", destination: "Seattle Rail Freight Node Yard", rdd: "2026-06-12", checked: true, loaded: true, assignedTruckId: "TRK-09", timestamp: "Yesterday" },
-            { orderId: "DISP-7729", destination: "Austin Distribution Core Cluster", rdd: "2026-06-09", checked: false, loaded: false, assignedTruckId: null, timestamp: "--" },
-            { orderId: "DISP-3021", destination: "Miami CrossDock Terminal Port Area", rdd: "2026-06-15", checked: true, loaded: false, assignedTruckId: null, timestamp: "02:10:45 AM" },
-            { orderId: "DISP-8820", destination: "Denver Mountain Storage Vaults", rdd: "2026-06-08", checked: false, loaded: false, assignedTruckId: null, timestamp: "--" }
+        let currentActiveUserSessionRole = "ADMIN";
+        let currentTargetFilteredDate = "2026-06-08";
+        let activeTimelineVisualizationShiftMode = "day";
+        let milestoneTimelineChartInstance = null;
+        let globalSelectedThemeContextMode = "dark";
+
+        // INTERACTIVE PIPELINE ASSIGNMENT POINTER CACHE STRUCT
+        let activeModalTargetDispatchReferenceID = null;
+
+        // SEED COMPREHENSIVE INITIAL DATA INFRASTRUCTURE MODEL LIST
+        let databaseDeliveriesStore = [
+            { dispatch: "10129030", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "AUV", bay: "Bay 1", truck: "AUV-1", picked: true, pgi: true, invoiced: true, ds: true, checked: true, loaded: true, timestamps: { picked: "21:00", pgi: "21:15", invoiced: "21:30", ds: "21:45", checked: "22:00", loaded: "22:15" }, timestampHour: 21 },
+            { dispatch: "10129031", rdd: "2026-06-08", customer: "WAL", route: "PASIG", type: "AUV", bay: "Bay 2", truck: "AUV-2", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:30" }, timestampHour: 22 },
+            { dispatch: "10129032", rdd: "2026-06-08", customer: "UNIMART", route: "NCR", type: "6WH", bay: "Bay 3", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: true, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:10", invoiced: "22:20", ds: "22:40" }, timestampHour: 22 },
+            { dispatch: "10129033", rdd: "2026-06-08", customer: "PBD", route: "NOVA", type: "6WH", bay: "Bay 4", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: true, ds: false, checked: false, loaded: false, timestamps: { picked: "22:15", pgi: "22:30", invoiced: "22:50" }, timestampHour: 22 },
+            { dispatch: "10129034", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "6WH", bay: "Bay 5", truck: "UNASSIGNED", picked: true, pgi: false, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:00" }, timestampHour: 23 },
+            { dispatch: "10129035", rdd: "2026-06-08", customer: "PG", route: "PASIG", type: "6WH", bay: "Bay 6", truck: "UNASSIGNED", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "23:10", pgi: "23:40" }, timestampHour: 23 }
         ];
 
-        let fleetTransportAssetPoolArray = [
-            { truckId: "TRK-01", type: "Reefer Box Unit 53ft", status: "Available" },
-            { truckId: "TRK-04", type: "Dry Van Logistics Carrier", status: "Available" },
-            { truckId: "TRK-09", type: "Flatbed Intermodal Chassis", status: "Busy" },
-            { truckId: "TRK-12", type: "Reefer Box Unit 53ft", status: "Available" },
-            { truckId: "TRK-15", type: "Heavy-Duty Lowboy Platform", status: "Available" }
-        ];
-
-        let dockBaysStagingLayoutArray = [
-            { bayId: "BAY-ALPHA", name: "Dock Bay Alpha Terminal Entrance", occupied: true, linkedOrderId: "DISP-4821" },
-            { bayId: "BAY-BETA", name: "Dock Bay Beta Heavy Cargo Loading", occupied: false, linkedOrderId: null },
-            { bayId: "BAY-GAMMA", name: "Dock Bay Gamma Intermodal Staging Area", occupied: false, linkedOrderId: null }
-        ];
-
-        let terminalAuthorizedUsersRosterArray = [
-            { username: "SystemAdmin", role: "Admin", passPhraseToken: "admin123" },
-            { username: "LeadDispatcher", role: "Dispatcher", passPhraseToken: "disp456" },
-            { username: "YardAuditor", role: "Auditor", passPhraseToken: "audit789" }
-        ];
-
-        let activeUserProfile = { username: "SystemAdmin", role: "Admin" }; // Default tracking matrix session context simulation
-        let globalSystemTimelineAnalyticalChartInstanceReference = null;
-
-        // TEMPORARY MANUAL ASSIGNMENT WORKFLOW POINTERS
-        let currentTruckTargetDispatchId = null;
-
-        // CONFLICT OVERRIDE CONTROL REGISTER BINDINGS STATE
-        let temporaryStagingBayConflictStateOverrideContainer = null;
-
-        /**
-         * Initialize Core Operational Systems Engine UI View Layers
-         */
-        document.addEventListener("DOMContentLoaded", () => {
-            evaluateRememberedDeviceSessionToken();
-            synchronizeUIRenderCycles();
-        });
-
-        /**
-         * Inspect Device for a Local Storage Persistent Remember Me Authentication Token
-         */
-        function evaluateRememberedDeviceSessionToken() {
-            const storedToken = localStorage.getItem('rememberedUserToken');
-            if (storedToken) {
-                // Find matching simulation user account if token matches expected format
-                const targetProfile = terminalAuthorizedUsersRosterArray.find(u => u.role === 'Admin');
-                if (targetProfile) {
-                    activeUserProfile = { username: targetProfile.username, role: targetProfile.role };
-                }
-            }
-            updateApplicationAuthenticationContextDomRendering();
+        // SEED CORE DEMO DATA FIELDS TO GENERATE THE GRAPH RENDER RANGE STREAKS
+        for (let i = 36; i <= 45; i++) {
+            databaseDeliveriesStore.push({
+                dispatch: "101290" + i,
+                rdd: "2026-06-08",
+                customer: i % 2 === 0 ? "ASDFSDF" : "SDFDSF",
+                route: i % 2 === 0 ? "MANILA CITY" : "QUEZON CITY",
+                type: "AUV", bay: "UNASSIGNED", truck: "UNASSIGNED",
+                picked: i <= 41, pgi: i <= 39, invoiced: i <= 37, ds: i <= 36, checked: false, loaded: false,
+                timestamps: { picked: i <= 41 ? "21:00" : null, pgi: i <= 39 ? "21:30" : null, invoiced: i <= 37 ? "21:45" : null, ds: i <= 36 ? "22:00" : null },
+                timestampHour: 21
+            });
         }
 
-        /**
-         * Global Theme Custom CSS Data Variables Configuration Transitions
-         */
-        function executeSystemThemeTransition(toggleInputSourceElement) {
-            if (toggleInputSourceElement.checked) {
-                document.documentElement.setAttribute('data-theme', 'light');
+        let databaseTrucksStore = [
+            { type: "AUV", code: "AUV-1", plate: "NHN-675", status: "ON_ROUTE", hourMark: 10, date: "2026-06-08", timestampEntry: "10:14" },
+            { type: "AUV", code: "AUV-2", plate: "NKB-1234", status: "AVAILABLE", hourMark: 10, date: "2026-06-08", timestampEntry: "10:22" },
+            { type: "AUV", code: "AUV-3", plate: "XYZ-9988", status: "AVAILABLE", hourMark: 10, date: "2026-06-08", timestampEntry: "10:35" },
+            { type: "4WH", code: "4W-1", plate: "RST-5678", status: "AVAILABLE", hourMark: 10, date: "2026-06-08", timestampEntry: "11:02" }
+        ];
+
+        let databaseUsersStore = [
+            { username: "ADMIN", password: "OUTBOUND", accessType: "ADMIN", role: "Admin" },
+            { username: "PGI", password: "PGI", accessType: "STAFF", role: "PGI" },
+            { username: "AR", password: "AR", accessType: "STAFF", role: "AR" },
+            { username: "TRANSPORT", password: "TRANSPORT", accessType: "STAFF", role: "Transport" }
+        ];
+
+        // --- LOGIN AND SESSION ACCESS VALIDATION MECHANISM ---
+        function authenticateSystemLoginSession() {
+            const selectedRole = document.getElementById("login-form-selected-identity-node").value;
+            const enteredPassword = document.getElementById("login-form-token-field").value;
+            const rememberMeChecked = document.getElementById("login-form-remember-me-checkbox").checked;
+
+            const matchedUserRecord = databaseUsersStore.find(u => u.username === selectedRole && u.password === enteredPassword);
+
+            if (matchedUserRecord) {
+                if (rememberMeChecked) {
+                    localStorage.setItem("logitrack_remembered_role", selectedRole);
+                } else {
+                    localStorage.removeItem("logitrack_remembered_role");
+                }
+                
+                executeRoleContextSwitch(selectedRole);
+                document.getElementById("application-login-checkpoint-overlay").classList.add("hidden");
+                document.getElementById("login-form-token-field").value = "";
             } else {
-                document.documentElement.removeAttribute('data-theme');
+                alert("Security Authorization Failed: Invalid access key credential validation trace match.");
             }
+        }
+
+        function invalidateUserTerminalLogout() {
+            localStorage.removeItem("logitrack_remembered_role");
+            document.getElementById("login-form-remember-me-checkbox").checked = false;
+            document.getElementById("application-login-checkpoint-overlay").classList.remove("hidden");
+        }
+
+        // --- ADMINISTRATIVE DISPATCH DELETION FLOW ROUTINE ---
+        function executeAdministrativeDispatchDeletion(dispatchId) {
+            if (currentActiveUserSessionRole !== 'ADMIN') return;
+            if (confirm(`Administrative Action Confirmation: Permanently delete dispatch manifest row item reference [${dispatchId}] from system tracking matrix?`)) {
+                // Return any assigned truck to service pool availability prior to line clearing
+                const record = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
+                if (record && record.truck !== 'UNASSIGNED') {
+                    const tIdx = databaseTrucksStore.findIndex(t => t.code === record.truck && t.date === currentTargetFilteredDate);
+                    if (tIdx !== -1) databaseTrucksStore[tIdx].status = "AVAILABLE";
+                }
+                databaseDeliveriesStore = databaseDeliveriesStore.filter(d => d.dispatch !== dispatchId);
+                synchronizeUIRenderCycles();
+            }
+        }
+
+        // --- LINEAR VERIFICATION VALIDATION ENGINE CORE ---
+        function getValidationStepError(manifest, columnKey, attemptValue) {
+            if (attemptValue === false) return null;
+            switch(columnKey) {
+                case 'pgi': if (!manifest.picked) return "Pipeline Exception: Complete 'Picked' check validation first."; break;
+                case 'invoiced': if (!manifest.pgi) return "Pipeline Exception: Complete 'PGI' check validation first."; break;
+                case 'ds': if (!manifest.invoiced) return "Pipeline Exception: Complete 'Invoiced' check validation first."; break;
+                case 'checked': if (!manifest.ds) return "Pipeline Exception: Complete 'DS Print' check validation first."; break;
+                case 'loaded': if (!manifest.checked) return "Pipeline Exception: Complete 'Checked' stage before loading asset rows."; break;
+            }
+            return null;
+        }
+
+        // --- EXCEL AGGREGATION PARSER MECHANISM ---
+        function processExcelClipboardData() {
+            const rawInputString = document.getElementById("excel-paste-input-area").value.trim();
+            if (!rawInputString) {
+                alert("Operation Terminated: Clipboard engine text field buffer is empty.");
+                return;
+            }
+
+            const rowsArray = rawInputString.split("\n");
+            let importedRowsCount = 0;
+            let duplicateRowsCount = 0;
+
+            rowsArray.forEach(rowString => {
+                const columnTokens = rowString.split("\t");
+                if (columnTokens.length >= 5) {
+                    const type = columnTokens[0].trim().toUpperCase();
+                    const dispatch = columnTokens[1].trim();
+                    const rdd = columnTokens[2].trim();
+                    const customer = columnTokens[3].trim();
+                    const route = columnTokens[4].trim().toUpperCase();
+
+                    if (dispatch) {
+                        const isDuplicate = databaseDeliveriesStore.some(d => d.dispatch === dispatch);
+                        if (!isDuplicate) {
+                            databaseDeliveriesStore.push({
+                                dispatch, rdd, customer, route, type,
+                                bay: "UNASSIGNED", truck: "UNASSIGNED",
+                                picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
+                                timestamps: {}, timestampHour: 10
+                            });
+                            importedRowsCount++;
+                        } else {
+                            duplicateRowsCount++;
+                        }
+                    }
+                }
+            });
+
+            alert(`Data Ingestion Log: Successfully validated and mapped (${importedRowsCount}) delivery items.${duplicateRowsCount > 0 ? ` Skipped (${duplicateRowsCount}) duplicate IDs.` : ''}`);
+            document.getElementById("excel-paste-input-area").value = "";
+            document.getElementById("excel-importer-drawer").classList.add("hidden");
+            synchronizeUIRenderCycles();
+        }
+
+        // --- CHECKBOX FLOW LIFECYCLE MANAGEMENT ROUTINE ---
+        function executeStateCheckboxTransition(dispatchId, columnKey, checkedBooleanState) {
+            const rowIdx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
+            if (rowIdx === -1) return;
+
+            const manifestRecord = databaseDeliveriesStore[rowIdx];
+            const pipelineError = getValidationStepError(manifestRecord, columnKey, checkedBooleanState);
+            if (pipelineError) {
+                alert(pipelineError);
+                renderPlanningTableMatrixView();
+                return;
+            }
+
+            // TRIGGER BAY INTERACTIVE POP-UP DIALOGUE ON 'CHECKED' STEP VALIDATION TRANSITION
+            if (columnKey === 'checked' && checkedBooleanState === true) {
+                activeModalTargetDispatchReferenceID = dispatchId;
+                openInteractiveBayAssignmentModal(dispatchId);
+                return;
+            }
+
+            // REVERT THE ASSIGNED BAY CONFIGURATION AUTOMATICALLY IF 'CHECKED' ROW GETS UNCHECKED
+            if (columnKey === 'checked' && checkedBooleanState === false) {
+                databaseDeliveriesStore[rowIdx].bay = "UNASSIGNED";
+            }
+
+            // ASSET VEHICLE ATTACHMENT MODAL INVOCATION ON LOADED MANIFEST EVENTS
+            if (columnKey === 'loaded' && checkedBooleanState === true) {
+                openInteractiveTruckAssignmentModal(dispatchId);
+                return;
+            } else if (columnKey === 'loaded' && checkedBooleanState === false) {
+                const assignedTruckCode = manifestRecord.truck;
+                if (assignedTruckCode !== 'UNASSIGNED') {
+                    const vIdx = databaseTrucksStore.findIndex(t => t.code === assignedTruckCode && t.date === currentTargetFilteredDate);
+                    if (vIdx !== -1) databaseTrucksStore[vIdx].status = "AVAILABLE";
+                }
+                databaseDeliveriesStore[rowIdx].truck = "UNASSIGNED";
+            }
+
+            // APPLY ACTIVE DATA MODIFICATIONS CONTEXT LOGIC
+            if (!manifestRecord.timestamps) manifestRecord.timestamps = {};
+            if (checkedBooleanState) {
+                const currentClock = new Date();
+                manifestRecord.timestamps[columnKey] = `${currentClock.getHours().toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
+            } else {
+                manifestRecord.timestamps[columnKey] = null;
+            }
+
+            databaseDeliveriesStore[rowIdx][columnKey] = checkedBooleanState;
+            synchronizeUIRenderCycles();
+        }
+
+        // --- INTERACTIVE MODAL INTERFACE FLOW ENGINES ---
+        function openInteractiveBayAssignmentModal(dispatchId) {
+            document.getElementById("modal-target-dispatch-lbl").innerText = dispatchId;
+            const container = document.getElementById("modal-bay-buttons-layout-container");
+            container.innerHTML = "";
+
+            const manifest = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
+
+            for (let b = 1; b <= 8; b++) {
+                const bayName = `Bay ${b}`;
+                const isOccupiedByOther = databaseDeliveriesStore.some(d => d.bay === bayName && d.dispatch !== dispatchId && d.rdd === currentTargetFilteredDate);
+                
+                const btn = document.createElement("button");
+                btn.className = isOccupiedByOther ? "btn-secondary" : "btn-primary";
+                if (isOccupiedByOther) btn.style.opacity = "0.4";
+                btn.innerHTML = `<i class="fa-solid fa-warehouse"></i> ${bayName} ${isOccupiedByOther ? '(Occupied)' : ''}`;
+                
+                btn.onclick = () => {
+                    if (isOccupiedByOther) {
+                        if (!confirm(`${bayName} contains an active staging lot conflict. Proceed and displace cross-dock entries anyway?`)) return;
+                        databaseDeliveriesStore.forEach(d => { if(d.bay === bayName && d.rdd === currentTargetFilteredDate) d.bay = "UNASSIGNED"; });
+                    }
+                    applyBayAssignmentTransaction(dispatchId, bayName);
+                };
+                container.appendChild(btn);
+            }
+
+            document.getElementById("modal-unassign-btn-element").onclick = () => {
+                applyBayAssignmentTransaction(dispatchId, "UNASSIGNED");
+            };
+
+            document.getElementById("bay-assignment-modal-element").classList.remove("hidden");
+        }
+
+        function closeInteractiveBayAssignmentModal() {
+            if (activeModalTargetDispatchReferenceID) {
+                const idx = databaseDeliveriesStore.findIndex(d => d.dispatch === activeModalTargetDispatchReferenceID);
+                if (idx !== -1 && databaseDeliveriesStore[idx].bay === "UNASSIGNED") {
+                    databaseDeliveriesStore[idx].checked = false;
+                }
+            }
+            document.getElementById("bay-assignment-modal-element").classList.add("hidden");
+            activeModalTargetDispatchReferenceID = null;
+            renderPlanningTableMatrixView();
+        }
+
+        function applyBayAssignmentTransaction(dispatchId, chosenBayName) {
+            const idx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
+            if (idx !== -1) {
+                databaseDeliveriesStore[idx].bay = chosenBayName;
+                databaseDeliveriesStore[idx].checked = true;
+                
+                if (!databaseDeliveriesStore[idx].timestamps) databaseDeliveriesStore[idx].timestamps = {};
+                const currentClock = new Date();
+                databaseDeliveriesStore[idx].timestamps['checked'] = `${currentClock.getHours().toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
+            }
+            document.getElementById("bay-assignment-modal-element").classList.add("hidden");
+            activeModalTargetDispatchReferenceID = null;
+            synchronizeUIRenderCycles();
+        }
+
+        // --- INTERACTIVE TRUCK ASSIGNMENT SELECTION OVERLAYS ---
+        function openInteractiveTruckAssignmentModal(dispatchId) {
+            const manifest = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
+            if (!manifest) return;
+
+            activeModalTargetDispatchReferenceID = dispatchId;
+            document.getElementById("modal-target-truck-dispatch-lbl").innerText = `${dispatchId} (${manifest.type})`;
+            
+            const container = document.getElementById("modal-truck-buttons-layout-container");
+            container.innerHTML = "";
+
+            const matchableAvailableTrucks = databaseTrucksStore.filter(t => 
+                t.type === manifest.type && t.date === currentTargetFilteredDate && t.status === 'AVAILABLE'
+            );
+
+            if (matchableAvailableTrucks.length === 0) {
+                container.innerHTML = `<p style="font-size:0.85rem; color:var(--accent-danger); text-align:center; padding:12px; background:rgba(239,68,68,0.05); border:1px solid rgba(239,68,68,0.15); border-radius:6px;">Yard Deficit Fault: Zero available fleet assets listed for type layout variant [${manifest.type}]</p>`;
+            } else {
+                matchableAvailableTrucks.forEach(truck => {
+                    const btn = document.createElement("button");
+                    btn.className = "btn-secondary";
+                    btn.style.display = "flex";
+                    btn.style.justifyContent = "space-between";
+                    btn.style.alignItems = "center";
+                    btn.style.textAlign = "left";
+                    btn.style.padding = "12px";
+                    btn.style.borderColor = "var(--border-color)";
+                    btn.innerHTML = `<span><i class="fa-solid fa-truck-flatbed" style="color:var(--accent-color); margin-right:8px;"></i><strong>${truck.code}</strong></span> <code style="font-size:0.75rem; color:var(--text-secondary);">${truck.plate}</code>`;
+                    btn.onclick = () => {
+                        applyManualTruckAssignmentTransaction(dispatchId, truck.code);
+                    };
+                    container.appendChild(btn);
+                });
+            }
+            document.getElementById("truck-assignment-modal-element").classList.remove("hidden");
+        }
+
+        function closeInteractiveTruckAssignmentModal() {
+            document.getElementById("truck-assignment-modal-element").classList.add("hidden");
+            activeModalTargetDispatchReferenceID = null;
+            renderPlanningTableMatrixView();
+        }
+
+        function applyManualTruckAssignmentTransaction(dispatchId, truckCode) {
+            const dIdx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
+            const tIdx = databaseTrucksStore.findIndex(t => t.code === truckCode && t.date === currentTargetFilteredDate);
+
+            if (dIdx !== -1 && tIdx !== -1) {
+                databaseDeliveriesStore[dIdx].truck = truckCode;
+                databaseDeliveriesStore[dIdx].loaded = true;
+                databaseTrucksStore[tIdx].status = "ON_ROUTE";
+
+                if (!databaseDeliveriesStore[dIdx].timestamps) databaseDeliveriesStore[dIdx].timestamps = {};
+                const currentClock = new Date();
+                databaseDeliveriesStore[dIdx].timestamps['loaded'] = `${currentClock.getHours().toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
+            }
+
+            document.getElementById("truck-assignment-modal-element").classList.add("hidden");
+            activeModalTargetDispatchReferenceID = null;
+            synchronizeUIRenderCycles();
+        }
+
+        // --- THEME CONTEXT SWITCH CONTROLLER ROUTINE ---
+        function toggleThemeMode() {
+            globalSelectedThemeContextMode = globalSelectedThemeContextMode === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", globalSelectedThemeContextMode);
             rebuildTimelineAnalyticalCharts();
         }
 
-        /**
-         * Collapse / Expand Command Elements Function for the Terminal Navigation Sidebar Layout
-         */
-        function toggleSidebarInterfaceState() {
-            const sidebarElementNode = document.getElementById('mainTerminalSidebar');
-            sidebarElementNode.classList.toggle('collapsed');
-        }
-
-        /**
-         * Manage Authentication Login/Logout Workflow States Transitions
-         */
-        function toggleAuthenticationFlowState() {
-            if (activeUserProfile) {
-                // Disconnect Current Profile Scope Session Sequence
-                activeUserProfile = null;
-                localStorage.removeItem('rememberedUserToken'); // Clear persistence token on explicit signout
-                updateApplicationAuthenticationContextDomRendering();
-                synchronizeUIRenderCycles();
-                displayPortalAuthenticationDialogModal();
-            } else {
-                displayPortalAuthenticationDialogModal();
-            }
-        }
-
-        function displayPortalAuthenticationDialogModal() {
-            const selectDropdownElement = document.getElementById('authFormSelectUserDropdown');
-            selectDropdownElement.innerHTML = terminalAuthorizedUsersRosterArray.map(u => `<option value="${u.username}">${u.username} (${u.role})</option>`).join('');
-            document.getElementById('authenticationGatewayPortalModal').classList.remove('hidden-state');
-        }
-
-        function closePortalAuthenticationDialogModal() {
-            document.getElementById('authenticationGatewayPortalModal').classList.add('hidden-state');
-            document.getElementById('authFormInputFieldSecret').value = "";
-            document.getElementById('authRememberDeviceCheckbox').checked = false;
-        }
-
-        function executePortalUserContextAuthentication(submitEventNotificationContext) {
-            submitEventNotificationContext.preventDefault();
-            const targetSelectedProfileUsername = document.getElementById('authFormSelectUserDropdown').value;
-            const enteredSecurityInputSecretString = document.getElementById('authFormInputFieldSecret').value;
-            const rememberMeChecked = document.getElementById('authRememberDeviceCheckbox').checked;
-
-            const profileMatchedEntity = terminalAuthorizedUsersRosterArray.find(u => u.username === targetSelectedProfileUsername && u.passPhraseToken === enteredSecurityInputSecretString);
+        // --- COLLAPSIBLE SIDEBAR LAYOUT TOGGLE COMPONENT ---
+        function toggleSidebarLayout() {
+            const sidebar = document.getElementById("main-sidebar");
+            const chevron = document.getElementById("sidebar-chevron");
+            sidebar.classList.toggle("minimized");
             
-            if (profileMatchedEntity) {
-                activeUserProfile = { username: profileMatchedEntity.username, role: profileMatchedEntity.role };
-                
-                if (rememberMeChecked) {
-                    localStorage.setItem('rememberedUserToken', 'TRUSTED_DEVICE_HASH_SAMPLE');
-                } else {
-                    localStorage.removeItem('rememberedUserToken');
-                }
-
-                updateApplicationAuthenticationContextDomRendering();
-                closePortalAuthenticationDialogModal();
-                synchronizeUIRenderCycles();
+            if (sidebar.classList.contains("minimized")) {
+                chevron.className = "fa-solid fa-chevron-right";
             } else {
-                alert("Security Authorization Failed: Invalid Access Credential Tokens Supplied for target simulation profile.");
+                chevron.className = "fa-solid fa-chevron-left";
             }
         }
 
-        function updateApplicationAuthenticationContextDomRendering() {
-            if (activeUserProfile) {
-                document.getElementById('headerContextProfileTitle').innerText = `Terminal Operations [${activeUserProfile.username}]`;
-                document.getElementById('authActionTextLabel').innerText = "Disconnect Session";
-                document.getElementById('systemAuthTriggerButton').style.background = "rgba(239, 68, 68, 0.1)";
-                
-                if (activeUserProfile.role === "Admin") {
-                    document.body.classList.add('admin-authenticated');
-                } else {
-                    document.body.classList.remove('admin-authenticated');
-                }
-            } else {
-                document.getElementById('headerContextProfileTitle').innerText = "Terminal Operation Matrix [Disconnected Mode]";
-                document.getElementById('authActionTextLabel').innerText = "Establish Access Connection Token";
-                document.getElementById('systemAuthTriggerButton').style.background = "var(--accent-color)";
-                document.body.classList.remove('admin-authenticated');
-            }
-        }
-
-        /**
-         * Configuration & Credentials Update Engine Dialog Modals Management
-         */
-        function displayProfileConfigurationEngineModal() {
-            if (!activeUserProfile) {
-                alert("Action Block Exception: You must establish an active verified profile connection session to patch access credentials parameters.");
-                return;
-            }
-            document.getElementById('configFormActiveTargetProfileField').value = `${activeUserProfile.username} (${activeUserProfile.role})`;
-            document.getElementById('systemProfileConfigurationModalDialog').classList.remove('hidden-state');
-        }
-
-        function closeProfileConfigurationEngineModal() {
-            document.getElementById('systemProfileConfigurationModalDialog').classList.add('hidden-state');
-            document.getElementById('configFormInputFieldNewPassphrase').value = "";
-        }
-
-        function executeProfileSecurityCredentialsUpdate(formEventNotificationContext) {
-            formEventNotificationContext.preventDefault();
-            const payloadNewAccessString = document.getElementById('configFormInputFieldNewPassphrase').value;
+        // --- PASSWORD DATABASE MODIFICATION RUNTIMES ---
+        function handleActiveUserPasswordModification(event) {
+            event.preventDefault();
+            const newPass = document.getElementById("field-pass-new").value;
+            const uIdx = databaseUsersStore.findIndex(u => u.username === currentActiveUserSessionRole);
             
-            const targetedProfileIndex = terminalAuthorizedUsersRosterArray.findIndex(u => u.username === activeUserProfile.username);
-            if (targetedProfileIndex !== -1) {
-                terminalAuthorizedUsersRosterArray[targetedProfileIndex].passPhraseToken = payloadNewAccessString;
-                alert(`Security Update Success: Profile Access Key String parameters calibrated cleanly for active user reference [${activeUserProfile.username}].`);
-                closeProfileConfigurationEngineModal();
-                synchronizeUIRenderCycles();
+            if (uIdx !== -1) {
+                databaseUsersStore[uIdx].password = newPass;
+                alert(`Security Ledger Access Update: Password token for account entry profile [${currentActiveUserSessionRole}] altered successfully.`);
+                document.getElementById("change-password-system-form").reset();
+                document.getElementById("field-pass-user").value = currentActiveUserSessionRole;
+                renderUserMatrixDashboardView();
             }
         }
 
-        /**
-         * Admin-Only Operational Command Target: Delete Planning Matrix Dispatch Row Records
-         */
-        function triggerAdministrativePurgeDispatchRow(targetOrderIdToDelete) {
-            if (!activeUserProfile || activeUserProfile.role !== 'Admin') {
-                alert("Security Violation Context: Purge command aborted. This operational configuration is reserved exclusively for Administrative access vectors.");
+        // --- REVENUE AUDIT MANIFEST FILE GENERATION ROUTINE ---
+        function exportAuditTrailMatrixToCSV() {
+            const activeManifestLines = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
+            if (activeManifestLines.length === 0) {
+                alert("Operation Aborted: Target manifest registry frame contains zero records.");
                 return;
             }
 
-            if (confirm(`CRITICAL PURGE ACTION CONFIRMATION:\nAre you entirely certain you want to purge Dispatch Routing Order: ${targetOrderIdToDelete} from the live system core logs?\n\nThis deployment trace action is completely irreversible.`)) {
-                // Return checked asset to available status pool if it was bound to a truck
-                const targetedRecordMatch = uniquePlanningMatrixArray.find(r => r.orderId === targetOrderIdToDelete);
-                if (targetedRecordMatch && targetedRecordMatch.assignedTruckId) {
-                    const linkedTruckIndex = fleetTransportAssetPoolArray.findIndex(t => t.truckId === targetedRecordMatch.assignedTruckId);
-                    if (linkedTruckIndex !== -1) {
-                        fleetTransportAssetPoolArray[linkedTruckIndex].status = 'Available';
-                    }
-                }
+            let csvDataContent = "DISPATCH ID,REQ DELIVERY DATE,CUSTOMER ACCOUNT,ROUTE DESTINATION,TRUCK SPEC TYPE,STAGING BAY,ASSIGNED FLEET LOG,PICKED STATUS,PICKED TIMESTAMP,PGI STATUS,PGI TIMESTAMP,INVOICED STATUS,INVOICED TIMESTAMP,DS PRINT STATUS,DS PRINT TIMESTAMP,CHECKED STATUS,CHECKED TIMESTAMP,LOADED STATUS,LOADED TIMESTAMP\n";
+            
+            activeManifestLines.forEach(item => {
+                const t = item.timestamps || {};
+                csvDataContent += `"${item.dispatch}","${item.rdd}","${item.customer}","${item.route}","${item.type}","${item.bay}","${item.truck}",` +
+                                 `"${item.picked?'DONE':'PENDING'}","${t.picked || ''}",` +
+                                 `"${item.pgi?'DONE':'PENDING'}","${t.pgi || ''}",` +
+                                 `"${item.invoiced?'DONE':'PENDING'}","${t.invoiced || ''}",` +
+                                 `"${item.ds?'DONE':'PENDING'}","${t.ds || ''}",` +
+                                 `"${item.checked?'DONE':'PENDING'}","${t.checked || ''}",` +
+                                 `"${item.loaded?'DONE':'PENDING'}","${t.loaded || ''}"\n`;
+            });
 
-                // Clean matching bay reference traces
-                dockBaysStagingLayoutArray.forEach(bay => {
-                    if (bay.linkedOrderId === targetOrderIdToDelete) {
-                        bay.occupied = false;
-                        bay.linkedOrderId = null;
-                    }
+            const universalBlobHolder = new Blob([csvDataContent], { type: 'text/csv;charset=utf-8;' });
+            const temporaryAnchorElement = document.createElement("a");
+            temporaryAnchorElement.href = URL.createObjectURL(universalBlobHolder);
+            temporaryAnchorElement.setAttribute("download", `LogiTrack_MasterPlan_AuditMatrix_${currentTargetFilteredDate}.csv`);
+            document.body.appendChild(temporaryAnchorElement);
+            temporaryAnchorElement.click();
+            document.body.removeChild(temporaryAnchorElement);
+        }
+
+        // --- GLOBAL ACTIVE SYSTEM TIMELINE CONTROLLER ---
+        function propagateGlobalSystemDate(targetDateString) {
+            currentTargetFilteredDate = targetDateString;
+            document.querySelectorAll(".active-date-display-badge").forEach(elem => { elem.innerText = targetDateString; });
+            synchronizeUIRenderCycles();
+        }
+
+        // --- INTERACTIVE ROLE PERMISSIONS ROUTING MATRIX ---
+        function evaluateRoleAccessRuleRestrictions(metricColumnTypeKey) {
+            if (currentActiveUserSessionRole === 'ADMIN') return false;
+            if (currentActiveUserSessionRole === 'PGI' && metricColumnTypeKey === 'pgi') return false;
+            if (currentActiveUserSessionRole === 'AR' && metricColumnTypeKey === 'invoiced') return false;
+            if (currentActiveUserSessionRole === 'TRANSPORT' && metricColumnTypeKey === 'loaded') return false;
+            return true;
+        }
+
+        // --- LAYOUT VIEWS ROUTER ENGINE ---
+        const structuralLayoutViews = { 'nav-dash': 'panel-dashboard', 'nav-plan': 'panel-planning', 'nav-truck': 'panel-trucks', 'nav-bays': 'panel-bays', 'nav-security': 'panel-security', 'nav-users': 'panel-users' };
+        Object.keys(structuralLayoutViews).forEach(clickedTabId => {
+            document.getElementById(clickedTabId).addEventListener('click', () => {
+                Object.keys(structuralLayoutViews).forEach(tabId => {
+                    document.getElementById(tabId).classList.remove('active');
+                    document.getElementById(structuralLayoutViews[tabId]).classList.add('hidden');
                 });
-
-                // Clear record row entity item
-                uniquePlanningMatrixArray = uniquePlanningMatrixArray.filter(item => item.orderId !== targetOrderIdToDelete);
+                document.getElementById(clickedTabId).classList.add('active');
+                document.getElementById(structuralLayoutViews[clickedTabId]).classList.remove('hidden');
                 synchronizeUIRenderCycles();
-            }
-        }
+            });
+        });
 
-        /**
-         * Intercept Planning Grid Flow Status Checkbox Controls Actions Changes
-         */
-        function handlePlanningTableCheckboxStateTransition(targetCheckboxInputElementNode, targetOrderIdString, targetCheckboxLifecycleDesignationColumn) {
-            const matchingDataIndex = uniquePlanningMatrixArray.findIndex(item => item.orderId === targetOrderIdString);
-            if (matchingDataIndex === -1) return;
-
-            const timeNowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-            if (targetCheckboxLifecycleDesignationColumn === 'CHECKED') {
-                uniquePlanningMatrixArray[matchingDataIndex].checked = targetCheckboxInputElementNode.checked;
-                uniquePlanningMatrixArray[matchingDataIndex].timestamp = timeNowString;
-                
-                // Roll back Loaded state automatically if Checked structural link is stripped
-                if (!targetCheckboxInputElementNode.checked && uniquePlanningMatrixArray[matchingDataIndex].loaded) {
-                    uniquePlanningMatrixArray[matchingDataIndex].loaded = false;
-                    
-                    // Release mapped truck resources
-                    if (uniquePlanningMatrixArray[matchingDataIndex].assignedTruckId) {
-                        const trkId = uniquePlanningMatrixArray[matchingDataIndex].assignedTruckId;
-                        const fleetIdx = fleetTransportAssetPoolArray.findIndex(t => t.truckId === trkId);
-                        if (fleetIdx !== -1) fleetTransportAssetPoolArray[fleetIdx].status = "Available";
-                        uniquePlanningMatrixArray[matchingDataIndex].assignedTruckId = null;
-                    }
-                }
-                synchronizeUIRenderCycles();
-            } 
-            else if (targetCheckboxLifecycleDesignationColumn === 'LOADED') {
-                if (targetCheckboxInputElementNode.checked) {
-                    // Pre-requisite step check validation rule logic boundary
-                    if (!uniquePlanningMatrixArray[matchingDataIndex].checked) {
-                        alert("Workflow Validation Logic Error: A matrix planning record path must transition through 'CHECKED' milestone parameters before reaching 'LOADED' status maps.");
-                        targetCheckboxInputElementNode.checked = false;
-                        return;
-                    }
-
-                    // Open target selection prompt workflow instead of automated background mapping calculations
-                    currentTruckTargetDispatchId = targetOrderIdString;
-                    displayManualTruckAssignmentPromptModal(targetOrderIdString);
-                } else {
-                    // Rollback operational logic states maps when user explicitly clears checkbox
-                    uniquePlanningMatrixArray[matchingDataIndex].loaded = false;
-                    uniquePlanningMatrixArray[matchingDataIndex].timestamp = timeNowString;
-
-                    if (uniquePlanningMatrixArray[matchingDataIndex].assignedTruckId) {
-                        const currentAssignedTruckId = uniquePlanningMatrixArray[matchingDataIndex].assignedTruckId;
-                        const fleetAssetPoolIndex = fleetTransportAssetPoolArray.findIndex(t => t.truckId === currentAssignedTruckId);
-                        if (fleetAssetPoolIndex !== -1) {
-                            fleetTransportAssetPoolArray[fleetAssetPoolIndex].status = "Available";
-                        }
-                        uniquePlanningMatrixArray[matchingDataIndex].assignedTruckId = null;
-                    }
-                    synchronizeUIRenderCycles();
-                }
-            }
-        }
-
-        /**
-         * Render Choice Selection UI Roster Filter Vectors for Manual Asset Assignment Mapping Processes
-         */
-        function displayManualTruckAssignmentPromptModal(orderId) {
-            document.getElementById('manualTruckTargetDispatchDisplay').innerText = `#${orderId}`;
-            const dropSelector = document.getElementById('manualTruckSelectionDropdown');
-            
-            // Extract and map only verified available fleet tracking assets records
-            const isolatedAvailableFleetOptions = fleetTransportAssetPoolArray.filter(t => t.status === 'Available');
-            
-            if (isolatedAvailableFleetOptions.length === 0) {
-                dropSelector.innerHTML = `<option value="">-- NO AVAILABLE UNITS IN YARD POOL --</option>`;
+        function toggleControlDrawers(drawerTypeKey) {
+            if (drawerTypeKey === 'excel') {
+                document.getElementById("excel-importer-drawer").classList.toggle("hidden");
+                document.getElementById("manual-entry-drawer").classList.add("hidden");
             } else {
-                dropSelector.innerHTML = `<option value="">-- Choose verified active transport unit --</option>` +
-                    isolatedAvailableFleetOptions.map(t => `<option value="${t.truckId}">${t.truckId} (${t.type})</option>`).join('');
+                document.getElementById("manual-entry-drawer").classList.toggle("hidden");
+                document.getElementById("excel-importer-drawer").classList.add("hidden");
             }
-            
-            document.getElementById('manualTruckSelectionModalOverlay').classList.remove('hidden-state');
         }
 
-        function abortManualTruckAssignmentFlow() {
-            document.getElementById('manualTruckSelectionModalOverlay').classList.add('hidden-state');
-            currentTruckTargetDispatchId = null;
-            synchronizeUIRenderCycles(); // Reverts UI checkboxes states visually
-        }
-
-        function confirmManualTruckAssignmentLink() {
-            const selectorNode = document.getElementById('manualTruckSelectionDropdown');
-            const chosenAssetId = selectorNode.value;
-
-            if (!chosenAssetId) {
-                alert("Action Block Vector: Please select a valid yard transport fleet item option or abort operations framework changes.");
+        // --- TRANSACTION RECEPTORS ---
+        function handleManualManifestSubmission(event) {
+            event.preventDefault();
+            const dispatchId = document.getElementById("field-m-dispatch").value.trim();
+            if (databaseDeliveriesStore.some(d => d.dispatch === dispatchId)) {
+                alert("Error: Duplicate validation index exception parameter key.");
                 return;
             }
-
-            const matrixRecordIdx = uniquePlanningMatrixArray.findIndex(item => item.orderId === currentTruckTargetDispatchId);
-            const fleetAssetPoolIndex = fleetTransportAssetPoolArray.findIndex(t => t.truckId === chosenAssetId);
-
-            if (matrixRecordIdx !== -1 && fleetAssetPoolIndex !== -1) {
-                // Bind choice targets tracking links parameters
-                uniquePlanningMatrixArray[matrixRecordIdx].loaded = true;
-                uniquePlanningMatrixArray[matrixRecordIdx].assignedTruckId = chosenAssetId;
-                uniquePlanningMatrixArray[matrixRecordIdx].timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                
-                // Switch targeted asset tracking mode
-                fleetTransportAssetPoolArray[fleetAssetPoolIndex].status = "Busy";
-                
-                document.getElementById('manualTruckSelectionModalOverlay').classList.add('hidden-state');
-                currentTruckTargetDispatchId = null;
-                synchronizeUIRenderCycles();
-            }
-        }
-
-        /**
-         * Core Strategic Logic: Staging Bay Allocation Pipeline Control Rules Workflow Engine Switches
-         */
-        function handleStagingBayAllocationCheckboxStateToggle(targetCheckboxInputElementNode, targetBayIdentifierString) {
-            const activeBayIndex = dockBaysStagingLayoutArray.findIndex(bay => bay.bayId === targetBayIdentifierString);
-            if (activeBayIndex === -1) return;
-
-            if (targetCheckboxInputElementNode.checked) {
-                // Inspect master planning rows pool context to pull loaded items tracking indexes
-                const loadedMatrixOptionsPool = uniquePlanningMatrixArray.filter(r => r.loaded === true);
-                
-                if (loadedMatrixOptionsPool.length === 0) {
-                    alert("Allocation Fault Exception: No active dispatch matrix logs match standard 'LOADED' validation parameters to route directly to this terminal bay point.");
-                    targetCheckboxInputElementNode.checked = false;
-                    return;
-                }
-
-                // Automated first matching item extraction route strategy tracking choice
-                const targetedBindingSelectionCandidate = loadedMatrixOptionsPool[0];
-
-                // SYSTEM CONFLICT EVALUATION BOUNDARY INTERCEPT STEP
-                const currentConflictingEntityOwnerMatch = dockBaysStagingLayoutArray.find(bay => bay.occupied && bay.linkedOrderId === targetedBindingSelectionCandidate.orderId);
-
-                if (currentConflictingEntityOwnerMatch) {
-                    // Cache data inputs onto temporary tracking register containers to handle confirm processing operations links
-                    temporaryStagingBayConflictStateOverrideContainer = {
-                        targetBayId: targetBayIdentifierString,
-                        targetOrderId: targetedBindingSelectionCandidate.orderId,
-                        checkboxReferenceNode: targetCheckboxInputElementNode
-                    };
-
-                    displayStagingConflictAlertModalWindow(targetBayIdentifierString, currentConflictingEntityOwnerMatch.bayId, targetedBindingSelectionCandidate.orderId);
-                    return;
-                }
-
-                // If check passes clean, execute assignment map parameters directly without warnings triggers
-                executeStagingBayAllocationCommitParameters(targetBayIdentifierString, targetedBindingSelectionCandidate.orderId);
-            } else {
-                // Clean structural layout mappings values on clear actions triggers
-                dockBaysStagingLayoutArray[activeBayIndex].occupied = false;
-                dockBaysStagingLayoutArray[activeBayIndex].linkedOrderId = null;
-                synchronizeUIRenderCycles();
-            }
-        }
-
-        function displayStagingConflictAlertModalWindow(requestedBay, conflictingBay, orderId) {
-            document.getElementById('modalAlertTargetBayIdentifierString').innerText = requestedBay;
-            document.getElementById('modalAlertActiveConflictingContextValueField').value = `Allocated out on Dock Bay Ref Link: [${conflictingBay}]`;
-            document.getElementById('modalAlertOverrideRequestingRouteString').innerText = `#${orderId}`;
-            document.getElementById('stagingConflictAlertOverlayModal').classList.remove('hidden-state');
-        }
-
-        function closeStagingConflictDialogModal() {
-            document.getElementById('stagingConflictAlertOverlayModal').classList.add('hidden-state');
-            if (temporaryStagingBayConflictStateOverrideContainer && temporaryStagingBayConflictStateOverrideContainer.checkboxReferenceNode) {
-                temporaryStagingBayConflictStateOverrideContainer.checkboxReferenceNode.checked = false;
-            }
-            temporaryStagingBayConflictStateOverrideContainer = null;
-        }
-
-        function confirmStagingBayAllocationOverrideChain() {
-            if (!temporaryStagingBayConflictStateOverrideContainer) return;
-
-            const bId = temporaryStagingBayConflictStateOverrideContainer.targetBayId;
-            const oId = temporaryStagingBayConflictStateOverrideContainer.targetOrderId;
-
-            // Purge and strip trace logs locations linked out onto conflicting entity points maps
-            dockBaysStagingLayoutArray.forEach(bay => {
-                if (bay.linkedOrderId === oId) {
-                    bay.occupied = false;
-                    bay.linkedOrderId = null;
-                }
+            databaseDeliveriesStore.push({
+                dispatch: dispatchId, rdd: document.getElementById("field-m-rdd").value,
+                customer: document.getElementById("field-m-customer").value.trim(), route: document.getElementById("field-m-route").value.trim().toUpperCase(),
+                type: document.getElementById("field-m-type").value, bay: "UNASSIGNED",
+                truck: "UNASSIGNED", picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
+                timestamps: {}, timestampHour: 10
             });
-
-            // Bind entity directly to overridden option
-            executeStagingBayAllocationCommitParameters(bId, oId);
-
-            document.getElementById('stagingConflictAlertOverlayModal').classList.add('hidden-state');
-            temporaryStagingBayConflictStateOverrideContainer = null;
+            document.getElementById("manual-delivery-form-element").reset();
+            document.getElementById("manual-entry-drawer").classList.add("hidden");
+            synchronizeUIRenderCycles();
         }
 
-        function executeStagingBayAllocationCommitParameters(bayId, orderId) {
-            const bayIndex = dockBaysStagingLayoutArray.findIndex(b => b.bayId === bayId);
-            if (bayIndex !== -1) {
-                dockBaysStagingLayoutArray[bayIndex].occupied = true;
-                dockBaysStagingLayoutArray[bayIndex].linkedOrderId = orderId;
+        function handleTruckAssetRegistration(event) {
+            event.preventDefault();
+            const code = document.getElementById("field-t-code").value.trim().toUpperCase();
+            if (databaseTrucksStore.some(t => t.code === code && t.date === currentTargetFilteredDate)) {
+                alert("Operational Fault: Truck code identifier matches duplicate active log entry frames.");
+                return;
+            }
+            const timeObj = new Date();
+            const timestampNow = `${timeObj.getHours().toString().padStart(2,'0')}:${timeObj.getMinutes().toString().padStart(2,'0')}`;
+
+            databaseTrucksStore.push({
+                type: document.getElementById("field-t-type").value, code: code,
+                plate: document.getElementById("field-t-plate").value.trim().toUpperCase(), status: "AVAILABLE",
+                hourMark: timeObj.getHours(), date: currentTargetFilteredDate, timestampEntry: timestampNow
+            });
+            document.getElementById("fleet-asset-registry-form-element").reset();
+            synchronizeUIRenderCycles();
+        }
+
+        function deleteTruckAssetRecordInstance(truckCode) {
+            if (currentActiveUserSessionRole !== 'ADMIN') return;
+            if (confirm(`Administrative Action: Permanently clear fleet object entry reference [${truckCode}] from data cache stores?`)) {
+                databaseTrucksStore = databaseTrucksStore.filter(t => !(t.code === truckCode && t.date === currentTargetFilteredDate));
                 synchronizeUIRenderCycles();
             }
         }
 
-        /**
-         * Data Calculations Processor Modules View Targets Models Summaries
-         */
-        function renderDashboardCardsSummaryView() {
-            let pendingAccumulator = 0;
-            let completedAccumulator = 0;
+        function handleUserAccessAccountGeneration(event) {
+            event.preventDefault();
+            const username = document.getElementById("field-u-username").value.trim().toUpperCase();
+            if (databaseUsersStore.some(u => u.username === username)) return;
+            databaseUsersStore.push({
+                username: username, password: document.getElementById("field-u-password").value,
+                accessType: document.getElementById("field-u-type").value, role: document.getElementById("field-u-role").value
+            });
+            document.getElementById("user-credential-provision-form-element").reset();
+            renderUserMatrixDashboardView();
+        }
+
+        function revokeAccessAccountToken(targetUserKey) {
+            if (targetUserKey === 'ADMIN') return;
+            databaseUsersStore = databaseUsersStore.filter(u => u.username !== targetUserKey);
+            renderUserMatrixDashboardView();
+        }
+
+        function executeRoleContextSwitch(selectedRole) {
+            currentActiveUserSessionRole = selectedRole;
             
-            uniquePlanningMatrixArray.forEach(row => {
-                if (row.loaded) {
-                    completedAccumulator++;
-                } else {
-                    pendingAccumulator++;
-                }
+            // ADMIN VIEW LAYER PRIVILEGES RESTRICTIONS
+            document.getElementById("nav-users").className = selectedRole === 'ADMIN' ? "nav-item" : "nav-item disabled-nav";
+            document.getElementById("field-pass-user").value = selectedRole;
+            
+            synchronizeUIRenderCycles();
+        }
+
+        function switchTimelineShift(shiftKey) {
+            activeTimelineVisualizationShiftMode = shiftKey;
+            document.getElementById("btn-shift-day").className = shiftKey === 'day' ? 'tab-toggle active' : 'tab-toggle';
+            document.getElementById("btn-shift-night").className = shiftKey === 'night' ? 'tab-toggle active' : 'tab-toggle';
+            rebuildTimelineAnalyticalCharts();
+        }
+
+        // --- DASHBOARD CORE MONITORING LAYOUT ENGINE ---
+        function renderDashboardCardsSummaryView() {
+            const subset = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
+            const counts = { picked: 0, pgi: 0, invoiced: 0, ds: 0, checked: 0, loaded: 0 };
+            
+            subset.forEach(d => {
+                if (d.picked) counts.picked++; if (d.pgi) counts.pgi++; if (d.invoiced) counts.invoiced++;
+                if (d.ds) counts.ds++; if (d.checked) counts.checked++; if (d.loaded) counts.loaded++;
             });
 
-            const countAvailableTrucksPool = fleetTransportAssetPoolArray.filter(t => t.status === "Available").length;
-
-            document.getElementById('cardPendingMetricDisplay').innerText = pendingAccumulator;
-            document.getElementById('cardCompletedMetricDisplay').innerText = completedAccumulator;
-            document.getElementById('cardAvailableTrucksMetricDisplay').innerText = countAvailableTrucksPool;
+            const total = subset.length;
+            document.getElementById("dash-lbl-target").innerText = total;
+            
+            document.getElementById("dash-lbl-picked").innerHTML = `Done: ${counts.picked}`; 
+            document.getElementById("sub-lbl-picked").innerText = `Pending: ${total - counts.picked}`;
+            
+            document.getElementById("dash-lbl-pgi").innerHTML = `Done: ${counts.pgi}`; 
+            document.getElementById("sub-lbl-pgi").innerText = `Pending: ${total - counts.pgi}`;
+            
+            document.getElementById("dash-lbl-invoiced").innerHTML = `Done: ${counts.invoiced}`; 
+            document.getElementById("sub-lbl-invoiced").innerText = `Pending: ${total - counts.invoiced}`;
+            
+            document.getElementById("dash-lbl-ds").innerHTML = `Done: ${counts.ds}`; 
+            document.getElementById("sub-lbl-ds").innerText = `Pending: ${total - counts.ds}`;
+            
+            document.getElementById("dash-lbl-checked").innerHTML = `Done: ${counts.checked}`; 
+            document.getElementById("sub-lbl-checked").innerText = `Pending: ${total - counts.checked}`;
+            
+            document.getElementById("dash-lbl-loaded").innerHTML = `Done: ${counts.loaded}`; 
+            document.getElementById("sub-lbl-loaded").innerText = `Pending: ${total - counts.loaded}`;
         }
 
         function renderReconciliationAnalyticsGrid() {
-            const totalRowsCount = uniquePlanningMatrixArray.length;
-            const pendingCount = uniquePlanningMatrixArray.filter(r => !r.loaded).length;
-            const loadedCount = uniquePlanningMatrixArray.filter(r => r.loaded).length;
+            const classes = ["AUV", "4WH", "6WH", "10WH", "20FT/40FT"];
+            const scopedDeliveries = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
+            const scopedTrucks = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
 
-            document.getElementById('quickMetricTotalRowsText').innerText = totalRowsCount;
-            document.getElementById('quickMetricPendingText').innerText = pendingCount;
-            document.getElementById('quickMetricLoadedText').innerText = loadedCount;
+            let matrix = { 'PLAN': {}, 'AVAILABLE': {}, 'LOADED': {} };
+            classes.forEach(c => {
+                matrix['PLAN'][c] = scopedDeliveries.filter(d => d.type === c && d.checked === true && d.loaded === false).length;
+                matrix['AVAILABLE'][c] = scopedTrucks.filter(t => t.type === c && t.status === 'AVAILABLE').length;
+                matrix['LOADED'][c] = scopedDeliveries.filter(d => d.type === c && d.loaded === true).length;
+            });
 
-            const pctPending = totalRowsCount > 0 ? Math.round((pendingCount / totalRowsCount) * 100) : 0;
-            const pctLoaded = totalRowsCount > 0 ? Math.round((loadedCount / totalRowsCount) * 100) : 0;
-
-            const legendContainer = document.getElementById('chartSummaryMetricsLegendGrid');
-            legendContainer.innerHTML = `
-                <div class="legend-item-card" style="border-left-color: #94a3b8;">
-                    <span class="legend-title">PENDING FLOW LOGLINES</span>
-                    <div class="legend-value-row">
-                        <span class="legend-big-num">${pendingCount}</span>
-                        <span class="legend-percentage" style="color: var(--text-secondary);">${pctPending}%</span>
-                    </div>
-                </div>
-                <div class="legend-item-card" style="border-left-color: #a855f7;">
-                    <span class="legend-title">LOADED SECURED LIFECYCLES</span>
-                    <div class="legend-value-row">
-                        <span class="legend-big-num">${loadedCount}</span>
-                        <span class="legend-percentage" style="color: #a855f7;">${pctLoaded}%</span>
-                    </div>
-                </div>
-            `;
+            document.getElementById("reconciliation-matrix-tbody").innerHTML = ['PLAN', 'AVAILABLE', 'LOADED'].map(row => `
+                <tr>
+                    <td class="metric-label-col">${row}</td>
+                    <td>${matrix[row]['AUV']}</td><td>${matrix[row]['4WH']}</td><td>${matrix[row]['6WH']}</td><td>${matrix[row]['10WH']}</td><td>${matrix[row]['20FT/40FT']}</td>
+                </tr>
+            `).join('');
         }
 
         function renderPlanningTableMatrixView() {
-            const tbodyNode = document.getElementById('interactivePlanningTableBody');
-            tbodyNode.innerHTML = uniquePlanningMatrixArray.map(row => {
-                const trkBadge = row.assignedTruckId 
-                    ? `<span class="badge-element assigned-badge"><i class="fa-solid fa-truck-lock"></i> ${row.assignedTruckId}</span>`
-                    : `<span class="badge-element unassigned-badge">Unassigned</span>`;
-                
-                return `
-                    <tr data-matrix-row-order-id="${row.orderId}">
-                        <td style="font-weight: bold; color: var(--accent-color);">${row.orderId}</td>
-                        <td style="max-width: 240px; overflow: hidden; text-overflow: ellipsis;" title="${row.destination}">${row.destination}</td>
-                        <td><span class="badge-element unassigned-badge">${row.rdd}</span></td>
-                        <td>
-                            <div class="flow-checkbox-group">
-                                <label class="custom-checkbox-node ${row.checked ? 'checked-active' : ''}">
-                                    <input type="checkbox" ${row.checked ? 'checked' : ''} onchange="handlePlanningTableCheckboxStateTransition(this, '${row.orderId}', 'CHECKED')">
-                                    <span>CHECKED</span>
-                                </label>
-                                <label class="custom-checkbox-node ${row.loaded ? 'loaded-active' : ''}">
-                                    <input type="checkbox" ${row.loaded ? 'checked' : ''} onchange="handlePlanningTableCheckboxStateTransition(this, '${row.orderId}', 'LOADED')">
-                                    <span>LOADED</span>
-                                </label>
-                            </div>
-                        </td>
-                        <td>${trkBadge}</td>
-                        <td><span class="timestamp-stamp-text">${row.timestamp}</span></td>
-                        <td class="admin-column-cell">
-                            <button class="btn-circle-action btn-delete-row" onclick="triggerAdministrativePurgeDispatchRow('${row.orderId}')" title="Purge Record Row">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            const searchStr = document.getElementById("planning-text-search-filter").value.toLowerCase().trim();
+            const targetTbody = document.getElementById("planning-matrix-table-tbody");
+            const filtered = databaseDeliveriesStore.filter(m => m.rdd === currentTargetFilteredDate && (m.dispatch.toLowerCase().includes(searchStr) || m.customer.toLowerCase().includes(searchStr) || m.route.toLowerCase().includes(searchStr)));
+
+            // SHOW OR HIDE SYSTEM ROW MANAGEMENT ACTIONS HEADER DEPENDING ON USER CLASS
+            document.getElementById("th-planning-admin-actions").style.display = currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none';
+
+            if (filtered.length === 0) {
+                targetTbody.innerHTML = `<tr><td colspan="14" style="text-align:center; color:var(--text-secondary); padding:20px;">No matchable structural manifests configured inside active ledger indexes.</td></tr>`;
+                return;
+            }
+
+            targetTbody.innerHTML = filtered.map(m => `
+                <tr>
+                    <td><strong>${m.dispatch}</strong></td><td>${m.rdd}</td><td>${m.customer}</td><td><span style="color:var(--text-secondary);">${m.route}</span></td>
+                    <td><span style="background:rgba(15, 23, 42, 0.2); padding:2px 6px; border-radius:4px; font-weight:bold;">${m.type}</span></td>
+                    <td>
+                        <button class="btn-secondary" style="padding:4px 8px; font-size:0.8rem; border-color:var(--accent-color); color:var(--accent-color);" 
+                            ${evaluateRoleAccessRuleRestrictions('checked') ? 'disabled' : ''} onclick="openInteractiveBayAssignmentModal('${m.dispatch}')">
+                            <i class="fa-solid fa-warehouse"></i> ${m.bay === 'UNASSIGNED' ? 'Assign Bay' : m.bay}
+                        </button>
+                    </td>
+                    <td><strong style="color:${m.truck !== 'UNASSIGNED' ? 'var(--accent-success)' : 'var(--text-secondary)'}"><i class="fa-solid fa-truck-flatbed"></i> ${m.truck}</strong></td>
+                    <td style="text-align:center;"><input type="checkbox" ${m.picked ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('picked') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'picked', this.checked)"></td>
+                    <td style="text-align:center;"><input type="checkbox" ${m.pgi ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('pgi') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'pgi', this.checked)"></td>
+                    <td style="text-align:center;"><input type="checkbox" ${m.invoiced ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('invoiced') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'invoiced', this.checked)"></td>
+                    <td style="text-align:center;"><input type="checkbox" ${m.ds ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('ds') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'ds', this.checked)"></td>
+                    <td style="text-align:center;"><input type="checkbox" ${m.checked ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('checked') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'checked', this.checked)"></td>
+                    <td style="text-align:center;"><input type="checkbox" ${m.loaded ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('loaded') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'loaded', this.checked)"></td>
+                    <td style="text-align: right; display: ${currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none'};">
+                        <button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="executeAdministrativeDispatchDeletion('${m.dispatch}')">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function renderTruckAssetsListView() {
-            const tbodyNode = document.getElementById('fleetPoolAssetTrackerTableBody');
-            tbodyNode.innerHTML = fleetTransportAssetPoolArray.map(t => {
-                const badgeStatus = t.status === "Available" 
-                    ? `<span class="badge-element truck-available"><i class="fa-solid fa-circle-dot"></i> Available</span>`
-                    : `<span class="badge-element truck-busy"><i class="fa-solid fa-truck-ramp-box"></i> Active Loop</span>`;
-                return `
-                    <tr>
-                        <td style="font-weight: 600;">${t.truckId}</td>
-                        <td style="color: var(--text-secondary); font-size: 0.85rem;">${t.type}</td>
-                        <td>${badgeStatus}</td>
-                    </tr>
-                `;
-            }).join('');
+            const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
+            const tbody = document.getElementById("truck-fleet-pool-table-tbody");
+            
+            // SHOW OR HIDE ADMINISTRATIVE REMOVAL COLUMN ACTIONS OBJECT HEADER ELEMENTS
+            document.getElementById("th-truck-actions").style.display = currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none';
+
+            if (activeFleet.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px;">No vehicle asset logs listed inside active database tables.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = activeFleet.map(t => `
+                <tr>
+                    <td><span style="font-weight:700; color:var(--accent-color);">${t.type}</span></td><td><strong>${t.code}</strong></td><td><code>${t.plate}</code></td>
+                    <td><span style="padding:2px 6px; border-radius:4px; font-weight:bold; font-size:0.75rem; background:${t.status=='AVAILABLE'?'rgba(16,185,129,0.15)':'rgba(245,158,11,0.15)'}; color:${t.status=='AVAILABLE'?'var(--accent-success)':'var(--accent-warning)'};">${t.status}</span></td>
+                    <td><code>${t.timestampEntry || '00:00'}</code></td><td>${t.date}</td>
+                    <td style="text-align: right; display: ${currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none'};">
+                        <button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteTruckAssetRecordInstance('${t.code}')">
+                            <i class="fa-solid fa-trash-can"></i> Remove
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function renderDockBaysVisualStagingLayout() {
-            const gridContainer = document.getElementById('dockBaysStagingWrapperGrid');
-            gridContainer.innerHTML = dockBaysStagingLayoutArray.map(bay => {
-                const labelContext = bay.occupied && bay.linkedOrderId 
-                    ? `Allocated Route Unit: <strong style="color: var(--accent-warning);">${bay.linkedOrderId}</strong>` 
-                    : `Status Code: <span style="color: var(--text-secondary);">Clear Ground State</span>`;
-                
-                return `
-                    <div class="dock-bay-card ${bay.occupied ? 'occupied-state' : ''}">
-                        <div class="dock-card-top-header">
-                            <h3>${bay.name}</h3>
-                            <div class="dock-occupancy-dot"></div>
+            const activeManifests = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
+            const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
+
+            let gridHtml = "";
+            for (let b = 1; b <= 8; b++) {
+                const bayName = `Bay ${b}`;
+                const match = activeManifests.find(d => d.bay === bayName);
+                const isOccupied = !!match;
+                gridHtml += `
+                    <div class="bay-box ${isOccupied ? 'occupied' : ''}">
+                        <div class="bay-header"><span class="bay-name">${bayName}</span><span class="bay-status" style="background:${isOccupied?'var(--accent-color)':'var(--disabled-color)'};">${isOccupied?'OCCUPIED':'VACANT'}</span></div>
+                        <div style="font-size:0.8rem; min-height:60px;">
+                            ${isOccupied ? `<div>DSP: <strong>${match.dispatch}</strong></div><div style='color:var(--text-secondary);'>Account: ${match.customer}</div><div style='color:var(--accent-warning); font-weight:bold;'><i class='fa-solid fa-truck-pickup'></i> ${match.type} (${match.truck})</div>` : `<span style="color:var(--text-secondary); opacity:0.4;">Vacant Cross-Dock Zone</span>`}
                         </div>
-                        <div class="dock-assignment-context">
-                            ${labelContext}
-                        </div>
-                        <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border-color); display:flex; align-items:center;">
-                            <label class="custom-checkbox-node" style="font-size:0.85rem;">
-                                <input type="checkbox" ${bay.occupied ? 'checked' : ''} onchange="handleStagingBayAllocationCheckboxStateToggle(this, '${bay.bayId}')">
-                                <span>Activate Bay Mapping Override</span>
-                            </label>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    </div>`;
+            }
+            document.getElementById("bay-matrix-visual-layout-grid-box").innerHTML = gridHtml;
+
+            let summaryHtml = `<h3 style="font-size:0.95rem; font-weight:700; border-bottom:1px solid var(--border-color); padding-bottom:8px;"><i class="fa-solid fa-list-check" style="color:var(--accent-warning);"></i> Fleet Yard Standby Summary</h3>`;
+            ["AUV", "4WH", "6WH", "10WH", "20FT/40FT"].forEach(c => {
+                summaryHtml += `<div class="summary-pill"><span style="font-size:0.85rem; color:var(--text-secondary);">${c} Pool</span><span class="summary-count">${activeFleet.filter(t => t.type === c && t.status === 'AVAILABLE').length} Units</span></div>`;
+            });
+            document.getElementById("bay-view-yard-fleet-summary-right-box").innerHTML = summaryHtml;
         }
 
         function renderUserMatrixDashboardView() {
-            const tbodyNode = document.getElementById('systemUserRosterMatrixTableBody');
-            tbodyNode.innerHTML = terminalAuthorizedUsersRosterArray.map(u => {
-                const rowActionControl = (activeUserProfile && activeUserProfile.username === u.username)
-                    ? `<span style="font-size: 0.75rem; color: var(--accent-success); font-weight: bold;"><i class="fa-solid fa-user-check"></i> Connected Profile</span>`
-                    : `<span style="font-size: 0.75rem; color: var(--text-secondary);">Standby Scope Node</span>`;
-                return `
-                    <tr>
-                        <td style="font-weight: 600;">${u.username}</td>
-                        <td><span class="badge-element unassigned-badge" style="text-transform: uppercase;">${u.role}</span></td>
-                        <td>${rowActionControl}</td>
-                    </tr>
-                `;
-            }).join('');
+            document.getElementById("user-accounts-matrix-table-tbody").innerHTML = databaseUsersStore.map(u => `
+                <tr>
+                    <td><strong>${u.username}</strong></td><td><code>${u.password}</code></td><td><span style="font-weight:bold;">${u.accessType}</span></td><td><span style="color:var(--accent-color); font-weight:bold;">${u.role}</span></td>
+                    <td style="text-align: right;"><button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="revokeAccessAccountToken('${u.username}')" ${u.username === 'ADMIN' ? 'disabled' : ''}>Revoke Credentials</button></td>
+                </tr>
+            `).join('');
         }
 
-        /**
-         * Analytical Rendering Execution Method for ChartJS Dashboard Architecture
-         */
         function rebuildTimelineAnalyticalCharts() {
-            const canvasContextElement = document.getElementById('analyticalTimelineReconciliationChart');
-            if (!canvasContextElement) return;
+            const dayLabels = ['5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'];
+            const nightLabels = ['5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM'];
+            const activeLabels = activeTimelineVisualizationShiftMode === 'day' ? dayLabels : nightLabels;
+            const size = activeLabels.length;
 
-            if (globalSystemTimelineAnalyticalChartInstanceReference !== null) {
-                globalSystemTimelineAnalyticalChartInstanceReference.destroy();
-            }
+            let picked = Array(size).fill(0), pgi = Array(size).fill(0), inv = Array(size).fill(0), ds = Array(size).fill(0), chk = Array(size).fill(0), lod = Array(size).fill(0);
 
-            const labelAxis = uniquePlanningMatrixArray.map(item => item.orderId);
-            const chkDataPoints = uniquePlanningMatrixArray.map(item => item.checked ? 1 : 0);
-            const lodDataPoints = uniquePlanningMatrixArray.map(item => item.loaded ? 1 : 0);
+            activeLabels.forEach((lbl, idx) => {
+                if (currentTargetFilteredDate === '2026-06-08') {
+                    if (lbl === '9 PM') { picked[idx] = 11; pgi[idx] = 11; inv[idx] = 1; ds[idx] = 1; }
+                    if (lbl === '10 PM') { picked[idx] = 3; pgi[idx] = 3; inv[idx] = 2; ds[idx] = 1; chk[idx] = 1; lod[idx] = 1; }
+                    if (lbl === '11 PM') { picked[idx] = 2; pgi[idx] = 1; }
+                }
+            });
 
-            const resolvedThemeColorText = document.documentElement.getAttribute('data-theme') === 'light' ? '#0f172a' : '#94a3b8';
-            const resolvedGridLineTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.02)';
+            const ctx = document.getElementById("milestoneTimelineChart").getContext('2d');
+            if (milestoneTimelineChartInstance) milestoneTimelineChartInstance.destroy();
 
-            globalSystemTimelineAnalyticalChartInstanceReference = new Chart(canvasContextElement.getContext('2d'), {
+            const gridColor = globalSelectedThemeContextMode === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.04)";
+            const textThemeColor = globalSelectedThemeContextMode === "dark" ? "#94a3b8" : "#64748b";
+
+            milestoneTimelineChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labelAxis,
+                    labels: activeLabels,
                     datasets: [
-                        { label: 'CHECKED STATES', data: chkDataPoints, backgroundColor: '#10b981', barThickness: 16 },
-                        { label: 'LOADED STATES', data: lodDataPoints, backgroundColor: '#a855f7', barThickness: 16 }
+                        { label: 'TARGET LIMIT', type: 'line', data: Array(size).fill(16), borderColor: '#ef4444', borderDash: [5, 5], pointRadius: 0, fill: false },
+                        { label: 'PICKED', data: picked, backgroundColor: '#10b981' },
+                        { label: 'PGI', data: pgi, backgroundColor: '#ec4899' },
+                        { label: 'INVOICED', data: inv, backgroundColor: '#f59e0b' },
+                        { label: 'DS PRINTING', data: ds, backgroundColor: '#94a3b8' },
+                        { label: 'CHECKED', data: chk, backgroundColor: '#06b6d4' },
+                        { label: 'LOADED', data: lod, backgroundColor: '#a855f7' }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     scales: {
-                        x: { grid: { color: resolvedGridLineTheme }, ticks: { color: resolvedThemeColorText } },
-                        y: { min: 0, max: 1.5, grid: { color: resolvedGridLineTheme }, ticks: { stepSize: 1, color: resolvedThemeColorText } }
-                    ],
-                    plugins: {
-                        legend: { labels: { color: resolvedThemeColorText, boxWidth: 12, font: { size: 10 } } }
-                    }
+                        x: { grid: { color: gridColor }, ticks: { color: textThemeColor } },
+                        y: { min: 0, max: 16, grid: { color: gridColor }, ticks: { color: textThemeColor, stepSize: 2 } }
+                    },
+                    plugins: { legend: { labels: { color: textThemeColor, boxWidth: 10 } } }
                 }
             });
         }
@@ -1088,6 +1193,22 @@
             renderUserMatrixDashboardView();
             rebuildTimelineAnalyticalCharts();
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("live-system-clock").innerText = currentTargetFilteredDate;
+            document.getElementById("field-pass-user").value = currentActiveUserSessionRole;
+
+            // EVALUATE LOCAL STORAGE SESSIONS FOR AUTO-LOGIN ON SYSTEM REMEMBER ME HOOKS
+            const rememberedRole = localStorage.getItem("logitrack_remembered_role");
+            if (rememberedRole) {
+                executeRoleContextSwitch(rememberedRole);
+                document.getElementById("application-login-checkpoint-overlay").classList.add("hidden");
+                document.getElementById("login-form-selected-identity-node").value = rememberedRole;
+                document.getElementById("login-form-remember-me-checkbox").checked = true;
+            }
+
+            synchronizeUIRenderCycles();
+        });
     </script>
 </body>
 </html>
