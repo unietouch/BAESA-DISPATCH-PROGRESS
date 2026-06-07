@@ -6,7 +6,6 @@
     <title>LogiTrack System - Master Terminal Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -99,6 +98,11 @@
         .role-indicator-badge { font-size: 0.75rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; text-align: center; margin-top: 4px; display: inline-block; width: 100%; }
         .badge-admin { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
         .badge-staff { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+        /* MODAL POPUP SYSTEM STYLE FOR BAY SELECTION */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .modal-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; color: var(--accent-warning); display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 <body>
@@ -132,6 +136,30 @@
     </aside>
 
     <main>
+        <div id="bay-assignment-modal" class="modal-overlay hidden">
+            <div class="modal-container">
+                <div class="modal-title"><i class="fa-solid fa-warehouse"></i> Dock Staging Bay Validation</div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">Select a designated staging terminal dock area to complete this checking cycle validation step:</p>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 6px; text-transform: uppercase; font-weight: bold;">Available Bay</label>
+                    <select id="modal-bay-dropdown-selector">
+                        <option value="Bay 1">Bay 1</option>
+                        <option value="Bay 2">Bay 2</option>
+                        <option value="Bay 3">Bay 3</option>
+                        <option value="Bay 4">Bay 4</option>
+                        <option value="Bay 5">Bay 5</option>
+                        <option value="Bay 6">Bay 6</option>
+                        <option value="Bay 7">Bay 7</option>
+                        <option value="Bay 8">Bay 8</option>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="btn-secondary" onclick="closeBayAssignmentModal(false)">Cancel</button>
+                    <button class="btn-success" onclick="closeBayAssignmentModal(true)">Assign & Confirm</button>
+                </div>
+            </div>
+        </div>
+
         <div id="panel-dashboard" class="view-container">
             <div class="view-panel" style="padding: 16px; margin-bottom: 20px; background: #151f32;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
@@ -298,27 +326,11 @@
                     <form id="fleet-asset-registry-form-element" class="manual-entry-form" onsubmit="handleTruckAssetRegistration(event)">
                         <div>
                             <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Truck Classification Type</label>
-                            <select id="field-t-type" onchange="toggleTruckCodeRequirement(this.value)">
-                                <option value="AUV">AUV</option>
-                                <option value="4WH">4WH</option>
-                                <option value="6WH">6WH</option>
-                                <option value="10WH">10WH</option>
-                                <option value="20FT/40FT">20FT/40FT</option>
-                            </select>
+                            <select id="field-t-type"><option value="AUV">AUV</option><option value="4WH">4WH</option><option value="6WH">6WH</option><option value="10WH">10WH</option><option value="20FT/40FT">20FT/40FT</option></select>
                         </div>
-                        <div id="truck-code-wrapper" style="display:none;"><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Truck Code Identity</label><input type="text" id="field-t-code" placeholder="e.g., 4W-1"></div>
+                        <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Truck Code Identity</label><input type="text" id="field-t-code" placeholder="e.g., AUV-1" required></div>
                         <div><label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Registered Plate Number</label><input type="text" id="field-t-plate" placeholder="e.g., NHN-675" required></div>
-                        <div>
-                            <label style="font-size:0.75rem; display:block; margin-bottom:4px; color:var(--text-secondary);">Time of Entry Hour Mark</label>
-                            <select id="field-t-hour">
-                                <option value="5">05:00 AM</option><option value="6">06:00 AM</option><option value="7">07:00 AM</option>
-                                <option value="8">08:00 AM</option><option value="9">09:00 AM</option><option value="10" selected>10:00 AM</option>
-                                <option value="11">11:00 AM</option><option value="12">12:00 PM</option><option value="13">01:00 PM</option>
-                                <option value="14">02:00 PM</option><option value="15">03:00 PM</option><option value="16">04:00 PM</option>
-                                <option value="17">05:00 PM</option><option value="18">06:00 PM</option><option value="19">07:00 PM</option>
-                                <option value="20">08:00 PM</option><option value="21">09:00 PM</option><option value="22">10:00 PM</option>
-                            </select>
-                        </div>
+                        
                         <button type="submit" id="btn-save-truck-asset" class="btn-primary" style="background:var(--accent-warning); color:black;"><i class="fa-solid fa-floppy-disk"></i> Save Vehicle Asset</button>
                     </form>
                 </div>
@@ -331,8 +343,9 @@
                                 <th>Truck Code ID</th>
                                 <th>Registered Plate Layout</th>
                                 <th>Availability Status</th>
-                                <th>Registered Hour Mark</th>
+                                <th>Registered Timestamp</th>
                                 <th>Date Log</th>
+                                <th style="text-align: right;" id="th-truck-actions">Administrative Revocation</th>
                             </tr>
                         </thead>
                         <tbody id="truck-fleet-pool-table-tbody"></tbody>
@@ -394,26 +407,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="view-panel" style="margin-top: 20px; background: #0b0f19; border: 1px dashed rgba(255,255,255,0.15);">
-            <h4 style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-database" style="color: var(--accent-success);"></i> Fixed Database Migration Script (Resolves 'status column' & 'duplicate key' crashes)
-            </h4>
-            <textarea readonly style="font-family: monospace; font-size: 0.78rem; background: #05070f; border-color: rgba(255,255,255,0.05); color: #34d399; height: 110px; width: 100%; resize: none; padding: 12px;" onclick="this.select()">
--- FIXED SCHEMA: Dropped legacy string status columns to use binary timeline flags.
-CREATE TABLE IF NOT EXISTS public.deliveries (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    dispatch_number TEXT NOT NULL UNIQUE,
-    delivery_date DATE NOT NULL,
-    customer_name TEXT NOT NULL,
-    route_description TEXT NOT NULL,
-    truck_type TEXT NOT NULL,
-    is_picked BOOLEAN DEFAULT false, is_pgi BOOLEAN DEFAULT false, is_invoiced BOOLEAN DEFAULT false, is_ds_printed BOOLEAN DEFAULT false, is_checked BOOLEAN DEFAULT false, is_loaded BOOLEAN DEFAULT false
-);
--- Compound asset boundary rule to block duplicate code items across same operational date spans safely.
-ALTER TABLE public.trucks DROP CONSTRAINT IF EXISTS unique_truck_per_day;
-ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code_identity, operational_shift_date);</textarea>
-        </div>
     </main>
 
     <script>
@@ -447,10 +440,10 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
         }
 
         let databaseTrucksStore = [
-            { type: "AUV", code: "AUV-1", plate: "NHN-675", status: "ON_ROUTE", hourMark: 10, date: "2026-06-08" },
-            { type: "AUV", code: "AUV-2", plate: "NKB-1234", status: "AVAILABLE", hourMark: 10, date: "2026-06-08" },
-            { type: "AUV", code: "AUV-3", plate: "XYZ-9988", status: "AVAILABLE", hourMark: 10, date: "2026-06-08" },
-            { type: "4WH", code: "4W-1", plate: "RST-5678", status: "AVAILABLE", hourMark: 10, date: "2026-06-08" }
+            { type: "AUV", code: "AUV-1", plate: "NHN-675", status: "ON_ROUTE", timeStampString: "10:00", date: "2026-06-08" },
+            { type: "AUV", code: "AUV-2", plate: "NKB-1234", status: "AVAILABLE", timeStampString: "10:00", date: "2026-06-08" },
+            { type: "AUV", code: "AUV-3", plate: "XYZ-9988", status: "AVAILABLE", timeStampString: "10:00", date: "2026-06-08" },
+            { type: "4WH", code: "4W-1", plate: "RST-5678", status: "AVAILABLE", timeStampString: "10:00", date: "2026-06-08" }
         ];
 
         let databaseUsersStore = [
@@ -460,18 +453,10 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
             { username: "TRANSPORT", password: "123", accessType: "STAFF", role: "Transport" }
         ];
 
-        // Toggle form input row visibility based on selected vehicle model type rules
-        function toggleTruckCodeRequirement(selectedType) {
-            const codeWrapper = document.getElementById("truck-code-wrapper");
-            const codeInput = document.getElementById("field-t-code");
-            if (selectedType === 'AUV') {
-                codeWrapper.style.display = "none";
-                codeInput.removeAttribute("required");
-            } else {
-                codeWrapper.style.display = "block";
-                codeInput.setAttribute("required", "true");
-            }
-        }
+        // POINTERS FOR TRACKING ONGOING MODAL PROMPT STATE
+        let pendingBayDispatchId = null;
+        let pendingBayColumnKey = null;
+        let pendingBayCheckedState = null;
 
         // --- LINEAR VERIFICATION PIPELINE CONTROL ENGINE ---
         function getValidationStepError(manifest, columnKey, attemptValue) {
@@ -480,13 +465,7 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
                 case 'pgi': if (!manifest.picked) return "Pipeline Exception: Complete 'Picked' check validation first."; break;
                 case 'invoiced': if (!manifest.pgi) return "Pipeline Exception: Complete 'PGI' check validation first."; break;
                 case 'ds': if (!manifest.invoiced) return "Pipeline Exception: Complete 'Invoiced' check validation first."; break;
-                case 'checked': 
-                    if (!manifest.ds) return "Pipeline Exception: Complete 'DS Print' check validation first."; 
-                    // REQUIRE USER TO ENTER A STAGING BAY NO. BEFORE CHECKING THE CHECKBOX
-                    if (!manifest.bay || manifest.bay === "UNASSIGNED") {
-                        return "Validation Exception Failed: You must assign a specific Staging Bay location element before validating the Checked stage status.";
-                    }
-                    break;
+                case 'checked': if (!manifest.ds) return "Pipeline Exception: Complete 'DS Print' check validation first."; break;
                 case 'loaded': if (!manifest.checked) return "Pipeline Exception: Complete 'Checked' stage before loading asset rows."; break;
             }
             return null;
@@ -554,35 +533,66 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
                 return;
             }
 
-            const currentClock = new Date();
-            const currentHourMark = currentClock.getHours();
+            // TRIGGER DYNAMIC BAY POPUP INTERFACE IF RETURNING 'CHECKED' STEP EQUAL TO TRUE
+            if (columnKey === 'checked' && checkedBooleanState === true) {
+                pendingBayDispatchId = dispatchId;
+                pendingBayColumnKey = columnKey;
+                pendingBayCheckedState = checkedBooleanState;
+                document.getElementById("bay-assignment-modal").classList.remove("hidden");
+                return;
+            }
+
+            proceedWithStateCheckboxTransition(dispatchId, columnKey, checkedBooleanState, null);
+        }
+
+        function closeBayAssignmentModal(confirmIntent) {
+            document.getElementById("bay-assignment-modal").classList.add("hidden");
+            if (confirmIntent && pendingBayDispatchId) {
+                const chosenBayValue = document.getElementById("modal-bay-dropdown-selector").value;
+                proceedWithStateCheckboxTransition(pendingBayDispatchId, pendingBayColumnKey, pendingBayCheckedState, chosenBayValue);
+            } else {
+                renderPlanningTableMatrixView();
+            }
+            pendingBayDispatchId = null;
+            pendingBayColumnKey = null;
+            pendingBayCheckedState = null;
+        }
+
+        function proceedWithStateCheckboxTransition(dispatchId, columnKey, checkedBooleanState, assignedBay) {
+            const rowIdx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
+            if (rowIdx === -1) return;
+
+            const manifestRecord = databaseDeliveriesStore[rowIdx];
 
             // Time Tracking Execution Engine
             if (!manifestRecord.timestamps) manifestRecord.timestamps = {};
             if (checkedBooleanState) {
-                manifestRecord.timestamps[columnKey] = `${currentHourMark.toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
-                if (columnKey === 'loaded') {
-                    manifestRecord.timestampHour = currentHourMark;
-                }
+                const currentClock = new Date();
+                manifestRecord.timestamps[columnKey] = `${currentClock.getHours().toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
             } else {
                 manifestRecord.timestamps[columnKey] = null;
             }
 
-            // Realtime Auto Vehicle Allocation Routine with Time Stamps Constraints
+            // Assign structural bay value if step matches checked
+            if (columnKey === 'checked') {
+                if (checkedBooleanState === true && assignedBay) {
+                    databaseDeliveriesStore[rowIdx].bay = assignedBay;
+                } else if (checkedBooleanState === false) {
+                    databaseDeliveriesStore[rowIdx].bay = "UNASSIGNED";
+                }
+            }
+
+            // Realtime Auto Vehicle Allocation Routine
             if (columnKey === 'loaded' && checkedBooleanState === true) {
-                // Find matching AVAILABLE vehicle where hourMark <= transaction execution timestamp hour
                 const availableAssetMatch = databaseTrucksStore.find(t => 
-                    t.type === manifestRecord.type && 
-                    t.date === currentTargetFilteredDate && 
-                    t.status === 'AVAILABLE' &&
-                    t.hourMark <= manifestRecord.timestampHour
+                    t.type === manifestRecord.type && t.date === currentTargetFilteredDate && t.status === 'AVAILABLE'
                 );
 
                 if (availableAssetMatch) {
                     databaseDeliveriesStore[rowIdx].truck = availableAssetMatch.code;
                     availableAssetMatch.status = "ON_ROUTE";
                 } else {
-                    alert(`Fleet Pool Empty: No matching 'AVAILABLE' vehicle types found in yard layout constraints matching type: ${manifestRecord.type} registered at or before execution hour ${manifestRecord.timestampHour}:00.`);
+                    alert(`Fleet Pool Empty: No matching 'AVAILABLE' vehicle types are docked in the yard right now for this model: ${manifestRecord.type}`);
                     renderPlanningTableMatrixView();
                     return;
                 }
@@ -691,33 +701,44 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
 
         function handleTruckAssetRegistration(event) {
             event.preventDefault();
-            const type = document.getElementById("field-t-type").value;
-            let code = "";
-            
-            // IF AUV IS CHOSEN THEN ONLY INPUT NEEDED IS PLATE NUMBER - AUTOMATE AUV SERIES CODES
-            if (type === 'AUV') {
-                const auvCount = databaseTrucksStore.filter(t => t.type === 'AUV' && t.date === currentTargetFilteredDate).length;
-                code = `AUV-${auvCount + 1}`;
-            } else {
-                code = document.getElementById("field-t-code").value.trim().toUpperCase();
-            }
-
+            const code = document.getElementById("field-t-code").value.trim().toUpperCase();
             if (databaseTrucksStore.some(t => t.code === code && t.date === currentTargetFilteredDate)) {
                 alert("Constraint Error: This vehicle identifier is already registered for this shift.");
                 return;
             }
 
+            // EXTRACT EXPLICIT ACCURATE SYSTEM TIMESTAMPS AS THE VEHICLE POOL OBJECT ENTRY PARAMETER
+            const timeObj = new Date();
+            const generatedTimestampString = `${timeObj.getHours().toString().padStart(2, '0')}:${timeObj.getMinutes().toString().padStart(2, '0')}`;
+
             databaseTrucksStore.push({
-                type: type, 
+                type: document.getElementById("field-t-type").value, 
                 code: code,
                 plate: document.getElementById("field-t-plate").value.trim().toUpperCase(), 
                 status: "AVAILABLE",
-                hourMark: parseInt(document.getElementById("field-t-hour").value), 
+                timeStampString: generatedTimestampString, 
                 date: currentTargetFilteredDate
             });
-
             document.getElementById("fleet-asset-registry-form-element").reset();
-            toggleTruckCodeRequirement(document.getElementById("field-t-type").value);
+            synchronizeUIRenderCycles();
+        }
+
+        function removeTruckFleetAssetInstance(targetTruckCode) {
+            const matchedIndex = databaseTrucksStore.findIndex(t => t.code === targetTruckCode && t.date === currentTargetFilteredDate);
+            if (matchedIndex === -1) return;
+            
+            // Revert loaded status if any manifests are tied to the removed truck
+            databaseDeliveriesStore.forEach((d, idx) => {
+                if (d.truck === targetTruckCode && d.rdd === currentTargetFilteredDate) {
+                    databaseDeliveriesStore[idx].truck = "UNASSIGNED";
+                    databaseDeliveriesStore[idx].loaded = false;
+                    if(databaseDeliveriesStore[idx].timestamps) {
+                        databaseDeliveriesStore[idx].timestamps.loaded = null;
+                    }
+                }
+            });
+
+            databaseTrucksStore.splice(matchedIndex, 1);
             synchronizeUIRenderCycles();
         }
 
@@ -807,21 +828,7 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
             targetTbody.innerHTML = filtered.map(m => `
                 <tr>
                     <td><strong>${m.dispatch}</strong></td><td>${m.rdd}</td><td>${m.customer}</td><td><span style="color:var(--text-secondary);">${m.route}</span></td>
-                    <td><span style="background:#0f172a; padding:2px 6px; border-radius:4px; font-weight:bold;">${m.type}</span></td>
-                    <td>
-                        <select style="padding: 2px 4px; font-size: 0.8rem; border-color: rgba(255,255,255,0.1); width: 110px;" 
-                                onchange="databaseDeliveriesStore.find(d => d.dispatch === '${m.dispatch}').bay = this.value; synchronizeUIRenderCycles();">
-                            <option value="UNASSIGNED" ${m.bay==='UNASSIGNED'?'selected':''}>UNASSIGNED</option>
-                            <option value="Bay 1" ${m.bay==='Bay 1'?'selected':''}>Bay 1</option>
-                            <option value="Bay 2" ${m.bay==='Bay 2'?'selected':''}>Bay 2</option>
-                            <option value="Bay 3" ${m.bay==='Bay 3'?'selected':''}>Bay 3</option>
-                            <option value="Bay 4" ${m.bay==='Bay 4'?'selected':''}>Bay 4</option>
-                            <option value="Bay 5" ${m.bay==='Bay 5'?'selected':''}>Bay 5</option>
-                            <option value="Bay 6" ${m.bay==='Bay 6'?'selected':''}>Bay 6</option>
-                            <option value="Bay 7" ${m.bay==='Bay 7'?'selected':''}>Bay 7</option>
-                            <option value="Bay 8" ${m.bay==='Bay 8'?'selected':''}>Bay 8</option>
-                        </select>
-                    </td>
+                    <td><span style="background:#0f172a; padding:2px 6px; border-radius:4px; font-weight:bold;">${m.type}</span></td><td><span style="color:var(--accent-color); font-weight:600;">${m.bay}</span></td>
                     <td><strong style="color:${m.truck !== 'UNASSIGNED' ? 'var(--accent-success)' : 'var(--text-secondary)'}"><i class="fa-solid fa-truck-flatbed"></i> ${m.truck}</strong></td>
                     <td style="text-align:center;"><input type="checkbox" ${m.picked ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('picked') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'picked', this.checked)"></td>
                     <td style="text-align:center;"><input type="checkbox" ${m.pgi ? 'checked' : ''} ${evaluateRoleAccessRuleRestrictions('pgi') ? 'disabled' : ''} onchange="executeStateCheckboxTransition('${m.dispatch}', 'pgi', this.checked)"></td>
@@ -836,15 +843,26 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
         function renderTruckAssetsListView() {
             const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
             const tbody = document.getElementById("truck-fleet-pool-table-tbody");
+            const thActions = document.getElementById("th-truck-actions");
+
+            if (currentActiveUserSessionRole === 'ADMIN') {
+                thActions.classList.remove("hidden");
+            } else {
+                thActions.classList.add("hidden");
+            }
+
             if (activeFleet.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No vehicle logs listed.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${currentActiveUserSessionRole === 'ADMIN' ? 7 : 6}" style="text-align:center; padding:20px;">No vehicle logs listed.</td></tr>`;
                 return;
             }
             tbody.innerHTML = activeFleet.map(t => `
                 <tr>
                     <td><span style="font-weight:700; color:var(--accent-color);">${t.type}</span></td><td><strong>${t.code}</strong></td><td><code>${t.plate}</code></td>
                     <td><span style="padding:2px 6px; border-radius:4px; font-weight:bold; font-size:0.75rem; background:${t.status==='AVAILABLE'?'rgba(16,185,129,0.15)':'rgba(245,158,11,0.15)'}; color:${t.status==='AVAILABLE'?'var(--accent-success)':'var(--accent-warning)'};">${t.status}</span></td>
-                    <td>${t.hourMark.toString().padStart(2, '0')}:00</td><td>${t.date}</td>
+                    <td>${t.timeStampString}</td><td>${t.date}</td>
+                    <td style="text-align: right;" class="${currentActiveUserSessionRole === 'ADMIN' ? '' : 'hidden'}">
+                        <button class="btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="removeTruckFleetAssetInstance('${t.code}')">Revoke Truck</button>
+                    </td>
                 </tr>
             `).join('');
         }
@@ -896,7 +914,13 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
 
             activeLabels.forEach((lbl, idx) => {
                 const hr = hourMap[lbl];
-                trucks[idx] = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate && t.hourMark <= hr && t.status === 'AVAILABLE').length;
+                
+                // Estimate timeline truck availability safely
+                trucks[idx] = databaseTrucksStore.filter(t => {
+                    if (t.date !== currentTargetFilteredDate || t.status !== 'AVAILABLE') return false;
+                    const parsedHour = parseInt(t.timeStampString.split(":")[0]);
+                    return parsedHour <= hr;
+                }).length;
 
                 if (currentTargetFilteredDate === '2026-06-08') {
                     if (lbl === '9 PM') { picked[idx] = 11; pgi[idx] = 11; inv[idx] = 1; ds[idx] = 1; }
@@ -908,15 +932,12 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
             const ctx = document.getElementById("milestoneTimelineChart").getContext('2d');
             if (milestoneTimelineChartInstance) milestoneTimelineChartInstance.destroy();
 
-            // Register the chartjs-plugin-datalabels globally to add structural callouts numbers overlays
-            Chart.register(ChartDataLabels);
-
             milestoneTimelineChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: activeLabels,
                     datasets: [
-                        { label: 'TARGET LIMIT', type: 'line', data: Array(size).fill(16), borderColor: '#ef4444', borderDash: [5, 5], pointRadius: 0, fill: false, datalabels: { display: false } },
+                        { label: 'TARGET LIMIT', type: 'line', data: Array(size).fill(16), borderColor: '#ef4444', borderDash: [5, 5], pointRadius: 0, fill: false },
                         { label: 'PICKED', data: picked, backgroundColor: '#10b981' },
                         { label: 'PGI', data: pgi, backgroundColor: '#ec4899' },
                         { label: 'INVOICED', data: inv, backgroundColor: '#f59e0b' },
@@ -932,19 +953,7 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
                         x: { grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#94a3b8' } },
                         y: { min: 0, max: 16, grid: { color: 'rgba(255,255,255,0.02)' }, ticks: { color: '#94a3b8', stepSize: 2 } }
                     },
-                    plugins: { 
-                        legend: { labels: { color: '#f8fafc', boxWidth: 10 } },
-                        datalabels: {
-                            color: '#ffffff',
-                            anchor: 'end',
-                            align: 'top',
-                            offset: -2,
-                            font: { weight: 'bold', size: 10 },
-                            formatter: function(value) {
-                                return value > 0 ? value : ''; // Only draw label callouts for slots with metrics data
-                            }
-                        }
-                    }
+                    plugins: { legend: { labels: { color: '#f8fafc', boxWidth: 10 } } }
                 }
             });
         }
@@ -961,7 +970,6 @@ ALTER TABLE public.trucks ADD CONSTRAINT unique_truck_per_day UNIQUE (truck_code
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("live-system-clock").innerText = currentTargetFilteredDate;
-            toggleTruckCodeRequirement(document.getElementById("field-t-type").value);
             synchronizeUIRenderCycles();
         });
     </script>
