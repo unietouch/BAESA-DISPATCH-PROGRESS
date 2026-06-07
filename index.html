@@ -40,10 +40,10 @@
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
 
         aside { width: var(--sidebar-width); background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; transition: width 0.3s, padding 0.3s; position: relative; }
-        aside.minimized { var(--sidebar-width): 80px; width: 80px; padding: 24px 12px; }
+        aside.minimized { width: 80px; padding: 24px 12px; }
+        aside.minimized .brand span, aside.minimized .brand-text { display: none; }
         
         .brand { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: bold; color: var(--accent-color); margin-bottom: 24px; overflow: hidden; white-space: nowrap; }
-        aside.minimized .brand span, aside.minimized .brand-text { display: none; }
         
         .nav-links { list-style: none; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; white-space: nowrap; }
@@ -66,9 +66,8 @@
         .kpi-card { background: rgba(21, 31, 50, 0.4); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; min-height: 100px; position: relative; }
         [data-theme="light"] .kpi-card { background: #f8fafc; }
         .kpi-card h4 { font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 4px; text-transform: uppercase; }
-        .kpi-v { font-size: 1.6rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+        .kpi-v font-size: 1.6rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
         .kpi-subtext { font-size: 0.75rem; color: var(--accent-warning); margin-top: 4px; font-weight: 600; }
-        .kpi-done-badge { font-size: 0.75rem; color: var(--accent-success); margin-top: 2px; font-weight: 600; }
 
         .reconciliation-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; border: 1px solid var(--border-color); text-align: center; }
         .reconciliation-table th { background: rgba(15, 23, 42, 0.8); color: var(--text-secondary); padding: 12px; font-weight: 600; border: 1px solid var(--border-color); }
@@ -94,7 +93,6 @@
         
         input, select, textarea { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 14px; border-radius: 6px; font-size: 0.9rem; width: 100%; outline: none; transition: border-color 0.2s; }
         input:focus, select:focus { border-color: var(--accent-color); }
-        input:disabled, select:disabled, textarea:disabled { background: var(--bg-main); opacity: 0.6; color: var(--disabled-color); cursor: not-allowed; }
 
         .btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-export, .btn-warning { padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; transition: background 0.2s; white-space: nowrap; }
         .btn-primary { background: var(--accent-color); color: white; }
@@ -103,7 +101,6 @@
         .btn-danger { background: var(--accent-danger); color: white; }
         .btn-warning { background: var(--accent-warning); color: black; }
         .btn-export { background: #4f46e5; color: white; }
-        .btn-primary:disabled, .btn-secondary:disabled, .btn-success:disabled, .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
         .table-wrapper { overflow-x: auto; margin-top: 16px; border-radius: 8px; border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
@@ -113,15 +110,9 @@
         tr:hover { background: rgba(255, 255, 255, 0.02); }
         
         input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-color); vertical-align: middle; }
-        
         .tab-toggle { background: transparent; border: none; color: var(--text-secondary); padding: 6px 14px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; }
         .tab-toggle.active { background: var(--accent-color); color: white; }
         
-        .role-indicator-badge { font-size: 0.75rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; text-align: center; margin-top: 4px; display: inline-block; width: 100%; }
-        .badge-admin { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .badge-staff { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-
-        /* MODAL STYLES */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:2000; }
         .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; }
         .modal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
@@ -129,7 +120,6 @@
 </head>
 <body>
 
-    <!-- AUTHENTICATION CHECKPOINT CONTAINER OVERLAY -->
     <div id="application-login-checkpoint-overlay" class="modal-overlay">
         <div class="modal-card" style="max-width: 380px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);">
             <div style="text-align: center; margin-bottom: 8px;">
@@ -161,7 +151,7 @@
     </div>
 
     <aside id="main-sidebar">
-        <button class="sidebar-toggle-btn" onclick="toggleSidebarLayout()" title="Minimize/Maximize Menu">
+        <button class="sidebar-toggle-btn" onclick="toggleSidebarLayout()">
             <i id="sidebar-chevron" class="fa-solid fa-chevron-left"></i>
         </button>
         <div>
@@ -287,7 +277,7 @@
                     </div>
                     <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:10px;">Paste clipboard columns structured as follows:<br>
                     <code style="background:rgba(15, 23, 42, 0.6); padding:4px 8px; border-radius:4px; display:inline-block; margin-top:4px; color:var(--text-main); font-weight:bold;">TRUCK TYPE [Tab] DISPATCH [Tab] REQ. DELIVERY DATE [Tab] CUSTOMER [Tab] ROUTE</code></p>
-                    <textarea id="excel-paste-input-area" rows="5" style="margin-bottom:12px; font-family: monospace; font-size:0.8rem;" placeholder="Paste row content directly from spreadsheet application..."></textarea>
+                    <textarea id="excel-paste-input-area" rows="5" style="margin-bottom:12px; font-family: monospace; font-size:0.8rem;" placeholder="4WH&#9;101330071&#9;6/9/2026&#9;EVER&#9;PASIG&#10;4WH&#9;101330087&#9;6/9/2026&#9;EVER&#9;PASIG"></textarea>
                     <button id="btn-execute-excel-parse" class="btn-primary" onclick="processExcelClipboardData()"><i class="fa-solid fa-gears"></i> Process Ingestion Matrix</button>
                 </div>
 
@@ -394,7 +384,7 @@
 
         <div id="panel-security" class="view-container hidden">
             <div class="view-panel" style="max-width: 500px;">
-                <h1 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;">Modify Security Profile Profile Password</h1>
+                <h1 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 8px;">Modify Security Profile Password</h1>
                 <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">Update credentials matching your active terminal authentication record session profile.</p>
                 
                 <form id="change-password-system-form" onsubmit="handleActiveUserPasswordModification(event)" style="display:flex; flex-direction:column; gap:16px;">
@@ -465,7 +455,6 @@
         </div>
     </div>
 
-    <!-- CUSTOM INTERACTIVE MODAL SELECTION TO ASSIGN TRUCKS ON LOADED EVENTS -->
     <div id="truck-assignment-modal-element" class="modal-overlay hidden">
         <div class="modal-card">
             <h3 style="font-size:1.1rem; font-weight:700;"><i class="fa-solid fa-truck-moving" style="color:var(--accent-warning);"></i> Manual Fleet Truck Assignment</h3>
@@ -483,11 +472,9 @@
         let activeTimelineVisualizationShiftMode = "day";
         let milestoneTimelineChartInstance = null;
         let globalSelectedThemeContextMode = "dark";
-
-        // INTERACTIVE PIPELINE ASSIGNMENT POINTER CACHE STRUCT
         let activeModalTargetDispatchReferenceID = null;
 
-        // SEED COMPREHENSIVE INITIAL DATA INFRASTRUCTURE MODEL LIST
+        // INITIAL DATABASE SEED DATA
         let databaseDeliveriesStore = [
             { dispatch: "10129030", rdd: "2026-06-08", customer: "PG", route: "CALOOCAN", type: "AUV", bay: "Bay 1", truck: "AUV-1", picked: true, pgi: true, invoiced: true, ds: true, checked: true, loaded: true, timestamps: { picked: "21:00", pgi: "21:15", invoiced: "21:30", ds: "21:45", checked: "22:00", loaded: "22:15" }, timestampHour: 21 },
             { dispatch: "10129031", rdd: "2026-06-08", customer: "WAL", route: "PASIG", type: "AUV", bay: "Bay 1", truck: "AUV-2", picked: true, pgi: true, invoiced: false, ds: false, checked: false, loaded: false, timestamps: { picked: "22:00", pgi: "22:30" }, timestampHour: 22 },
@@ -525,63 +512,7 @@
             { username: "TRANSPORT", password: "TRANSPORT", accessType: "STAFF", role: "Transport" }
         ];
 
-        // --- LOGIN AND SESSION ACCESS VALIDATION MECHANISM ---
-        function authenticateSystemLoginSession() {
-            const selectedRole = document.getElementById("login-form-selected-identity-node").value;
-            const enteredPassword = document.getElementById("login-form-token-field").value;
-            const rememberMeChecked = document.getElementById("login-form-remember-me-checkbox").checked;
-
-            const matchedUserRecord = databaseUsersStore.find(u => u.username === selectedRole && u.password === enteredPassword);
-
-            if (matchedUserRecord) {
-                if (rememberMeChecked) {
-                    localStorage.setItem("logitrack_remembered_role", selectedRole);
-                } else {
-                    localStorage.removeItem("logitrack_remembered_role");
-                }
-                
-                executeRoleContextSwitch(selectedRole);
-                document.getElementById("application-login-checkpoint-overlay").classList.add("hidden");
-                document.getElementById("login-form-token-field").value = "";
-            } else {
-                alert("Security Authorization Failed: Invalid access key credential validation trace match.");
-            }
-        }
-
-        function invalidateUserTerminalLogout() {
-            localStorage.removeItem("logitrack_remembered_role");
-            document.getElementById("login-form-remember-me-checkbox").checked = false;
-            document.getElementById("application-login-checkpoint-overlay").classList.remove("hidden");
-        }
-
-        // --- ADMINISTRATIVE DISPATCH DELETION FLOW ROUTINE ---
-        function executeAdministrativeDispatchDeletion(dispatchId) {
-            if (currentActiveUserSessionRole !== 'ADMIN') return;
-            if (confirm(`Administrative Action Confirmation: Permanently delete dispatch manifest row item reference [${dispatchId}] from system tracking matrix?`)) {
-                const record = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
-                if (record && record.truck !== 'UNASSIGNED') {
-                    const tIdx = databaseTrucksStore.findIndex(t => t.code === record.truck && t.date === currentTargetFilteredDate);
-                    if (tIdx !== -1) databaseTrucksStore[tIdx].status = "AVAILABLE";
-                }
-                databaseDeliveriesStore = databaseDeliveriesStore.filter(d => d.dispatch !== dispatchId);
-                synchronizeUIRenderCycles();
-            }
-        }
-
-        // --- LINEAR VERIFICATION VALIDATION ENGINE CORE ---
-        function getValidationStepError(manifest, columnKey, attemptValue) {
-            if (attemptValue === false) return null;
-            switch(columnKey) {
-                case 'pgi': if (!manifest.picked) return "Pipeline Exception: Complete 'Picked' check validation first."; break;
-                case 'invoiced': if (!manifest.pgi) return "Pipeline Exception: Complete 'PGI' check validation first."; break;
-                case 'ds': if (!manifest.invoiced) return "Pipeline Exception: Complete 'Invoiced' check validation first."; break;
-                case 'checked': if (!manifest.ds) return "Pipeline Exception: Complete 'DS Print' check validation first."; break;
-                case 'loaded': if (!manifest.checked) return "Pipeline Exception: Complete 'Checked' stage before loading asset rows."; break;
-            }
-            return null;
-        }
-
-        // --- EXCEL AGGREGATION PARSER MECHANISM ---
+        // --- EXCEL AGGREGATION PARSER MECHANISM WITH EXPLICIT DATE AUTO-STANDARDIZATION ---
         function processExcelClipboardData() {
             const rawInputString = document.getElementById("excel-paste-input-area").value.trim();
             if (!rawInputString) {
@@ -598,15 +529,30 @@
                 if (columnTokens.length >= 5) {
                     const type = columnTokens[0].trim().toUpperCase();
                     const dispatch = columnTokens[1].trim();
-                    const rdd = columnTokens[2].trim();
+                    let rawRdd = columnTokens[2].trim();
                     const customer = columnTokens[3].trim();
                     const route = columnTokens[4].trim().toUpperCase();
+
+                    // Standardize RDD inputs from formats like 6/9/2026 to standardized form YYYY-MM-DD
+                    if (rawRdd.includes("/")) {
+                        const dateParts = rawRdd.split("/");
+                        if (dateParts.length === 3) {
+                            const month = dateParts[0].padStart(2, '0');
+                            const day = dateParts[1].padStart(2, '0');
+                            const year = dateParts[2];
+                            rawRdd = `${year}-${month}-${day}`;
+                        }
+                    }
 
                     if (dispatch) {
                         const isDuplicate = databaseDeliveriesStore.some(d => d.dispatch === dispatch);
                         if (!isDuplicate) {
                             databaseDeliveriesStore.push({
-                                dispatch, rdd, customer, route, type,
+                                dispatch: dispatch, 
+                                rdd: rawRdd, 
+                                customer: customer, 
+                                route: route, 
+                                type: type,
                                 bay: "UNASSIGNED", truck: "UNASSIGNED",
                                 picked: false, pgi: false, invoiced: false, ds: false, checked: false, loaded: false,
                                 timestamps: {}, timestampHour: 10
@@ -625,7 +571,55 @@
             synchronizeUIRenderCycles();
         }
 
-        // --- CHECKBOX FLOW LIFECYCLE MANAGEMENT ROUTINE ---
+        function authenticateSystemLoginSession() {
+            const selectedRole = document.getElementById("login-form-selected-identity-node").value;
+            const enteredPassword = document.getElementById("login-form-token-field").value;
+            const rememberMeChecked = document.getElementById("login-form-remember-me-checkbox").checked;
+            const matchedUserRecord = databaseUsersStore.find(u => u.username === selectedRole && u.password === enteredPassword);
+
+            if (matchedUserRecord) {
+                if (rememberMeChecked) localStorage.setItem("logitrack_remembered_role", selectedRole);
+                else localStorage.removeItem("logitrack_remembered_role");
+                
+                executeRoleContextSwitch(selectedRole);
+                document.getElementById("application-login-checkpoint-overlay").classList.add("hidden");
+                document.getElementById("login-form-token-field").value = "";
+            } else {
+                alert("Security Authorization Failed: Invalid access key credential validation trace match.");
+            }
+        }
+
+        function invalidateUserTerminalLogout() {
+            localStorage.removeItem("logitrack_remembered_role");
+            document.getElementById("login-form-remember-me-checkbox").checked = false;
+            document.getElementById("application-login-checkpoint-overlay").classList.remove("hidden");
+        }
+
+        function executeAdministrativeDispatchDeletion(dispatchId) {
+            if (currentActiveUserSessionRole !== 'ADMIN') return;
+            if (confirm(`Administrative Action Confirmation: Permanently delete dispatch manifest row item reference [${dispatchId}] from system tracking matrix?`)) {
+                const record = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
+                if (record && record.truck !== 'UNASSIGNED') {
+                    const tIdx = databaseTrucksStore.findIndex(t => t.code === record.truck && t.date === currentTargetFilteredDate);
+                    if (tIdx !== -1) databaseTrucksStore[tIdx].status = "AVAILABLE";
+                }
+                databaseDeliveriesStore = databaseDeliveriesStore.filter(d => d.dispatch !== dispatchId);
+                synchronizeUIRenderCycles();
+            }
+        }
+
+        function getValidationStepError(manifest, columnKey, attemptValue) {
+            if (attemptValue === false) return null;
+            switch(columnKey) {
+                case 'pgi': if (!manifest.picked) return "Pipeline Exception: Complete 'Picked' check validation first."; break;
+                case 'invoiced': if (!manifest.pgi) return "Pipeline Exception: Complete 'PGI' check validation first."; break;
+                case 'ds': if (!manifest.invoiced) return "Pipeline Exception: Complete 'Invoiced' check validation first."; break;
+                case 'checked': if (!manifest.ds) return "Pipeline Exception: Complete 'DS Print' check validation first."; break;
+                case 'loaded': if (!manifest.checked) return "Pipeline Exception: Complete 'Checked' stage before loading asset rows."; break;
+            }
+            return null;
+        }
+
         function executeStateCheckboxTransition(dispatchId, columnKey, checkedBooleanState) {
             const rowIdx = databaseDeliveriesStore.findIndex(d => d.dispatch === dispatchId);
             if (rowIdx === -1) return;
@@ -672,7 +666,6 @@
             synchronizeUIRenderCycles();
         }
 
-        // --- INTERACTIVE MODAL INTERFACE FLOW ENGINES ---
         function openInteractiveBayAssignmentModal(dispatchId) {
             document.getElementById("modal-target-dispatch-lbl").innerText = dispatchId;
             const container = document.getElementById("modal-bay-buttons-layout-container");
@@ -680,7 +673,6 @@
 
             for (let b = 1; b <= 8; b++) {
                 const bayName = `Bay ${b}`;
-                // Count current assigned dispatches for this bay on the active target date
                 const currentBayCount = databaseDeliveriesStore.filter(d => d.bay === bayName && d.dispatch !== dispatchId && d.rdd === currentTargetFilteredDate).length;
                 const isFull = currentBayCount >= 3;
                 
@@ -726,7 +718,6 @@
             if (idx !== -1) {
                 databaseDeliveriesStore[idx].bay = chosenBayName;
                 databaseDeliveriesStore[idx].checked = true;
-                
                 if (!databaseDeliveriesStore[idx].timestamps) databaseDeliveriesStore[idx].timestamps = {};
                 const currentClock = new Date();
                 databaseDeliveriesStore[idx].timestamps['checked'] = `${currentClock.getHours().toString().padStart(2, '0')}:${currentClock.getMinutes().toString().padStart(2, '0')}`;
@@ -736,7 +727,6 @@
             synchronizeUIRenderCycles();
         }
 
-        // --- INTERACTIVE TRUCK ASSIGNMENT SELECTION OVERLAYS ---
         function openInteractiveTruckAssignmentModal(dispatchId) {
             const manifest = databaseDeliveriesStore.find(d => d.dispatch === dispatchId);
             if (!manifest) return;
@@ -760,7 +750,6 @@
                     btn.style.display = "flex";
                     btn.style.justifyContent = "space-between";
                     btn.style.alignItems = "center";
-                    btn.style.textAlign = "left";
                     btn.style.padding = "12px";
                     btn.style.borderColor = "var(--border-color)";
                     btn.innerHTML = `<span><i class="fa-solid fa-truck-flatbed" style="color:var(--accent-color); margin-right:8px;"></i><strong>${truck.code}</strong></span> <code style="font-size:0.75rem; color:var(--text-secondary);">${truck.plate}</code>`;
@@ -798,27 +787,19 @@
             synchronizeUIRenderCycles();
         }
 
-        // --- THEME CONTEXT SWITCH CONTROLLER ROUTINE ---
         function toggleThemeMode() {
             globalSelectedThemeContextMode = globalSelectedThemeContextMode === "dark" ? "light" : "dark";
             document.documentElement.setAttribute("data-theme", globalSelectedThemeContextMode);
             rebuildTimelineAnalyticalCharts();
         }
 
-        // --- COLLAPSIBLE SIDEBAR LAYOUT TOGGLE COMPONENT ---
         function toggleSidebarLayout() {
             const sidebar = document.getElementById("main-sidebar");
             const chevron = document.getElementById("sidebar-chevron");
             sidebar.classList.toggle("minimized");
-            
-            if (sidebar.classList.contains("minimized")) {
-                chevron.className = "fa-solid fa-chevron-right";
-            } else {
-                chevron.className = "fa-solid fa-chevron-left";
-            }
+            chevron.className = sidebar.classList.contains("minimized") ? "fa-solid fa-chevron-right" : "fa-solid fa-chevron-left";
         }
 
-        // --- PASSWORD DATABASE MODIFICATION RUNTIMES ---
         function handleActiveUserPasswordModification(event) {
             event.preventDefault();
             const newPass = document.getElementById("field-pass-new").value;
@@ -826,14 +807,13 @@
             
             if (uIdx !== -1) {
                 databaseUsersStore[uIdx].password = newPass;
-                alert(`Security Ledger Access Update: Password token for account entry profile [${currentActiveUserSessionRole}] altered successfully.`);
+                alert(`Security Ledger Access Update: Password token altered successfully.`);
                 document.getElementById("change-password-system-form").reset();
                 document.getElementById("field-pass-user").value = currentActiveUserSessionRole;
                 renderUserMatrixDashboardView();
             }
         }
 
-        // --- REVENUE AUDIT MANIFEST FILE GENERATION ROUTINE ---
         function exportAuditTrailMatrixToCSV() {
             const activeManifestLines = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
             if (activeManifestLines.length === 0) {
@@ -842,7 +822,6 @@
             }
 
             let csvDataContent = "DISPATCH ID,REQ DELIVERY DATE,CUSTOMER ACCOUNT,ROUTE DESTINATION,TRUCK SPEC TYPE,STAGING BAY,ASSIGNED FLEET LOG,PICKED STATUS,PICKED TIMESTAMP,PGI STATUS,PGI TIMESTAMP,INVOICED STATUS,INVOICED TIMESTAMP,DS PRINT STATUS,DS PRINT TIMESTAMP,CHECKED STATUS,CHECKED TIMESTAMP,LOADED STATUS,LOADED TIMESTAMP\n";
-            
             activeManifestLines.forEach(item => {
                 const t = item.timestamps || {};
                 csvDataContent += `"${item.dispatch}","${item.rdd}","${item.customer}","${item.route}","${item.type}","${item.bay}","${item.truck}",` +
@@ -863,14 +842,12 @@
             document.body.removeChild(temporaryAnchorElement);
         }
 
-        // --- GLOBAL ACTIVE SYSTEM TIMELINE CONTROLLER ---
         function propagateGlobalSystemDate(targetDateString) {
             currentTargetFilteredDate = targetDateString;
             document.querySelectorAll(".active-date-display-badge").forEach(elem => { elem.innerText = targetDateString; });
             synchronizeUIRenderCycles();
         }
 
-        // --- INTERACTIVE ROLE PERMISSIONS ROUTING MATRIX ---
         function evaluateRoleAccessRuleRestrictions(metricColumnTypeKey) {
             if (currentActiveUserSessionRole === 'ADMIN') return false;
             if (currentActiveUserSessionRole === 'PGI' && metricColumnTypeKey === 'pgi') return false;
@@ -879,7 +856,6 @@
             return true;
         }
 
-        // --- LAYOUT VIEWS ROUTER ENGINE ---
         const structuralLayoutViews = { 'nav-dash': 'panel-dashboard', 'nav-plan': 'panel-planning', 'nav-truck': 'panel-trucks', 'nav-bays': 'panel-bays', 'nav-security': 'panel-security', 'nav-users': 'panel-users' };
         Object.keys(structuralLayoutViews).forEach(clickedTabId => {
             document.getElementById(clickedTabId).addEventListener('click', () => {
@@ -903,7 +879,6 @@
             }
         }
 
-        // --- TRANSACTION RECEPTORS ---
         function handleManualManifestSubmission(event) {
             event.preventDefault();
             const dispatchId = document.getElementById("field-m-dispatch").value.trim();
@@ -944,7 +919,7 @@
 
         function deleteTruckAssetRecordInstance(truckCode) {
             if (currentActiveUserSessionRole !== 'ADMIN') return;
-            if (confirm(`Administrative Action: Permanently clear fleet object entry reference [${truckCode}] from data cache stores?`)) {
+            if (confirm(`Administrative Action: Permanently clear fleet object entry reference?`)) {
                 databaseTrucksStore = databaseTrucksStore.filter(t => !(t.code === truckCode && t.date === currentTargetFilteredDate));
                 synchronizeUIRenderCycles();
             }
@@ -975,14 +950,13 @@
             synchronizeUIRenderCycles();
         }
 
-        UX_SHIFT_TOGGLE: function switchTimelineShift(shiftKey) {
+        function switchTimelineShift(shiftKey) {
             activeTimelineVisualizationShiftMode = shiftKey;
             document.getElementById("btn-shift-day").className = shiftKey === 'day' ? 'tab-toggle active' : 'tab-toggle';
             document.getElementById("btn-shift-night").className = shiftKey === 'night' ? 'tab-toggle active' : 'tab-toggle';
             rebuildTimelineAnalyticalCharts();
         }
 
-        // --- DASHBOARD CORE MONITORING LAYOUT ENGINE ---
         function renderDashboardCardsSummaryView() {
             const subset = databaseDeliveriesStore.filter(d => d.rdd === currentTargetFilteredDate);
             const counts = { picked: 0, pgi: 0, invoiced: 0, ds: 0, checked: 0, loaded: 0 };
@@ -994,22 +968,16 @@
 
             const total = subset.length;
             document.getElementById("dash-lbl-target").innerText = total;
-            
             document.getElementById("dash-lbl-picked").innerHTML = `Done: ${counts.picked}`; 
             document.getElementById("sub-lbl-picked").innerText = `Pending: ${total - counts.picked}`;
-            
             document.getElementById("dash-lbl-pgi").innerHTML = `Done: ${counts.pgi}`; 
             document.getElementById("sub-lbl-pgi").innerText = `Pending: ${total - counts.pgi}`;
-            
             document.getElementById("dash-lbl-invoiced").innerHTML = `Done: ${counts.invoiced}`; 
             document.getElementById("sub-lbl-invoiced").innerText = `Pending: ${total - counts.invoiced}`;
-            
             document.getElementById("dash-lbl-ds").innerHTML = `Done: ${counts.ds}`; 
             document.getElementById("sub-lbl-ds").innerText = `Pending: ${total - counts.ds}`;
-            
             document.getElementById("dash-lbl-checked").innerHTML = `Done: ${counts.checked}`; 
             document.getElementById("sub-lbl-checked").innerText = `Pending: ${total - counts.checked}`;
-            
             document.getElementById("dash-lbl-loaded").innerHTML = `Done: ${counts.loaded}`; 
             document.getElementById("sub-lbl-loaded").innerText = `Pending: ${total - counts.loaded}`;
         }
@@ -1075,7 +1043,6 @@
         function renderTruckAssetsListView() {
             const activeFleet = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate);
             const tbody = document.getElementById("truck-fleet-pool-table-tbody");
-            
             document.getElementById("th-truck-actions").style.display = currentActiveUserSessionRole === 'ADMIN' ? 'table-cell' : 'none';
 
             if (activeFleet.length === 0) {
@@ -1157,15 +1124,25 @@
             `).join('');
         }
 
+        // --- TIMELINE GRAPH CORE CONTROLLER PACKED WITH AVAILABLE TRUCK METRIC COUNTER AGGREGATIONS ---
         function rebuildTimelineAnalyticalCharts() {
             const dayLabels = ['5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'];
             const nightLabels = ['5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM'];
             const activeLabels = activeTimelineVisualizationShiftMode === 'day' ? dayLabels : nightLabels;
             const size = activeLabels.length;
 
-            let picked = Array(size).fill(0), pgi = Array(size).fill(0), inv = Array(size).fill(0), ds = Array(size).fill(0), chk = Array(size).fill(0), lod = Array(size).fill(0);
+            let picked = Array(size).fill(0), pgi = Array(size).fill(0), inv = Array(size).fill(0), 
+                ds = Array(size).fill(0), chk = Array(size).fill(0), lod = Array(size).fill(0),
+                trucks = Array(size).fill(0);
+
+            // Fetch running calculation counts for available yard fleet items 
+            const scopedTrucks = databaseTrucksStore.filter(t => t.date === currentTargetFilteredDate && t.status === "AVAILABLE");
+            const generalAvailableFleetYardCount = scopedTrucks.length;
 
             activeLabels.forEach((lbl, idx) => {
+                // Populate running baseline count profiles dynamically 
+                trucks[idx] = generalAvailableFleetYardCount;
+
                 if (currentTargetFilteredDate === '2026-06-08') {
                     if (lbl === '9 PM') { picked[idx] = 11; pgi[idx] = 11; inv[idx] = 1; ds[idx] = 1; }
                     if (lbl === '10 PM') { picked[idx] = 3; pgi[idx] = 3; inv[idx] = 2; ds[idx] = 1; chk[idx] = 1; lod[idx] = 1; }
@@ -1185,6 +1162,7 @@
                     labels: activeLabels,
                     datasets: [
                         { label: 'TARGET LIMIT', type: 'line', data: Array(size).fill(16), borderColor: '#ef4444', borderDash: [5, 5], pointRadius: 0, fill: false },
+                        { label: 'AVAILABLE TRUCKS IN YARD', type: 'line', data: trucks, borderColor: '#eab308', backgroundColor: '#eab308', pointRadius: 3, fill: false },
                         { label: 'PICKED', data: picked, backgroundColor: '#10b981' },
                         { label: 'PGI', data: pgi, backgroundColor: '#ec4899' },
                         { label: 'INVOICED', data: inv, backgroundColor: '#f59e0b' },
@@ -1225,7 +1203,6 @@
                 document.getElementById("login-form-selected-identity-node").value = rememberedRole;
                 document.getElementById("login-form-remember-me-checkbox").checked = true;
             }
-
             synchronizeUIRenderCycles();
         });
     </script>
